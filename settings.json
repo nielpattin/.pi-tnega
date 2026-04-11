@@ -1,0 +1,91 @@
+{
+  "collapseChangelog": true,
+  "compaction": {
+    "enabled": false
+  },
+  "defaultModel": "gpt-5.4",
+  "defaultProvider": "openai-codex",
+  "defaultThinkingLevel": "high",
+  "doubleEscapeAction": "none",
+  "editorPaddingX": 0,
+  "enableSkillCommands": true,
+  "enabledModels": [],
+  "extensions": [
+    "-extensions\\theme-cycle\\index.ts",
+    "-extensions\\figma-start.ts",
+    "-extensions\\prompt-stash.ts",
+    "-extensions\\agents-discovery\\index.ts",
+    "-extensions\\context-scope.ts",
+    "-extensions\\files.ts",
+    "+extensions\\tps.ts",
+    "-extensions\\diff-renderer\\index.ts",
+    "+extensions\\tool-selector\\index.ts",
+    "-extensions\\powerline-footer\\index.ts",
+    "-extensions\\pwsh\\index.ts",
+    "+extensions\\tab-status\\index.ts",
+    "-extensions\\welcome\\index.ts",
+    "-extensions\\smart-sessions\\index.ts",
+    "-extensions\\notification\\index.ts"
+  ],
+  "followUpMode": "one-at-a-time",
+  "hideThinkingBlock": false,
+  "images": {
+    "autoResize": true
+  },
+  "lastChangelogVersion": "0.66.1",
+  "npmCommand": [
+    "npm"
+  ],
+  "packages": [
+    "npm:pi-mcporter",
+    "npm:pi-promptsmith",
+    {
+      "extensions": [
+        "-extensions\\index.ts"
+      ],
+      "source": "C:\\Users\\niel\\.pi\\agent\\extensions\\pi-teams"
+    },
+    "npm:pi-verbosity-control",
+    "git:https://github.com/badlogic/pi-diff-review",
+    "git:github.com/raunovillberg/im-pi-eccable",
+    "npm:pi-websearch-router",
+    "git:https://github.com/calesennett/pi-codex-fast"
+  ],
+  "pi-codex-fast": {
+    "enabled": false
+  },
+  "prompts": [
+    "+prompts\\dot-commit.md",
+    "-prompts/md2pdf.md",
+    "-prompts/dot-commit.md"
+  ],
+  "quietStartup": false,
+  "skills": [
+    "-skills\\writing-git-commits\\SKILL.md",
+    "-skills\\update-pi\\SKILL.md",
+    "-skills\\figma-use\\SKILL.md",
+    "-skills\\agent-browser\\SKILL.md",
+    "+skills\\drawio-diagrams-enhanced\\SKILL.md"
+  ],
+  "steeringMode": "one-at-a-time",
+  "terminal": {
+    "clearOnShrink": false
+  },
+  "theme": "catppuccin-mocha",
+  "themes": [
+    "-themes\\cyberpunk.json",
+    "-themes\\dracula.json",
+    "-themes\\everforest.json",
+    "-themes\\midnight-ocean.json",
+    "-themes\\ocean-breeze.json",
+    "-themes\\orng.json",
+    "-themes\\rose-pine.json",
+    "-themes\\synthwave.json",
+    "-themes\\tokyo-night.json",
+    "-themes\\terminal.json",
+    "-themes\\gruvbox.json",
+    "-themes\\nord.json"
+  ],
+  "transport": "websocket",
+  "treeFilterMode": "no-tools"
+}

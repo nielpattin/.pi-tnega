@@ -1,0 +1,22 @@
+{
+  "packageManager": "pnpm@10.30.1",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@mariozechner/pi-agent-core": "^0.62.0",
+    "@mariozechner/pi-ai": "^0.62.0",
+    "@mariozechner/pi-coding-agent": "^0.62.0",
+    "@mariozechner/pi-tui": "^0.62.0",
+    "@sinclair/typebox": "^0.34.48",
+    "@zenobius/pi-extension-config": "^0.2.0",
+    "fzf": "^0.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.1"
+  }
+}
