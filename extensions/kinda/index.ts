@@ -172,7 +172,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.registerProvider("cline", {
 		baseUrl: "https://api.cline.bot/api/v1",
-		apiKey: "sk_124d35a163519c2cc37f988c32f667766a6eee91e5cad639e315e2cf68f5527e",
+		apiKey: "CLINE_API_KEY",
 		api: "openai-completions",
 		models: [
 			{
@@ -187,7 +187,139 @@ export default function (pi: ExtensionAPI) {
 		],
 	});
 
-	pi.registerProvider("xiaomi", {
+	pi.registerProvider("xiaomi-token-plan-sgp", {
+		api: "anthropic-messages",
 		baseUrl: "https://token-plan-sgp.xiaomimimo.com/anthropic",
+		apiKey: "XIAOMI_TOKEN_PLAN_SGP_API_KEY",
+		models: [
+			{
+				id: "mimo-v2.5-pro",
+				name: "MiMo-V2.5-Pro",
+				reasoning: true,
+				input: ["text"],
+				contextWindow: 1048576,
+				maxTokens: 131072,
+				cost: {
+					input: 1,
+					output: 3,
+					cacheRead: 0.2,
+					cacheWrite: 0,
+				},
+			},
+			{
+				id: "mimo-v2.5",
+				name: "MiMo-V2.5",
+				reasoning: true,
+				input: ["text"],
+				contextWindow: 1048576,
+				maxTokens: 131072,
+				cost: {
+					input: 0.4,
+					output: 2,
+					cacheRead: 0.08,
+					cacheWrite: 0,
+				},
+			},
+		],
+	});
+
+	pi.registerProvider("blazeai", {
+		baseUrl: "https://blazeai.boxu.dev/api/v1",
+		apiKey: "BLAZEAI_API_KEY",
+		api: "openai-completions",
+		models: [
+			{
+				id: "DeepSeek-V4-Flash-TEST",
+				name: "DeepSeek V4 Flash",
+				reasoning: true,
+				input: ["text"],
+				cost: {
+					input: 0.2,
+					output: 0.4,
+					cacheRead: 0.04,
+					cacheWrite: 0,
+				},
+				contextWindow: 256000,
+				maxTokens: 65536,
+			},
+			{
+				id: "kimi-k2.6-TEST",
+				name: "Kimi K2.6",
+				reasoning: true,
+				input: ["text"],
+				cost: {
+					input: 0.2,
+					output: 0.4,
+					cacheRead: 0.04,
+					cacheWrite: 0,
+				},
+				contextWindow: 256000,
+				maxTokens: 65536,
+			},
+			{
+				id: "claude-opus-4.7",
+				name: "Claude Opus 4.7",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: {
+					input: 0.2,
+					output: 0.4,
+					cacheRead: 0.04,
+					cacheWrite: 0,
+				},
+				contextWindow: 256000,
+				maxTokens: 65536,
+			},
+		],
+	});
+
+	pi.registerProvider("cmd", {
+		baseUrl: "http://localhost:3100/v1",
+		apiKey: "COMMANDCODE_API_KEY",
+		api: "openai-completions",
+		models: [
+			{
+				id: "deepseek/deepseek-v4-flash",
+				name: "DeepSeek V4 Flash",
+				reasoning: true,
+				input: ["text"],
+				cost: {
+					input: 0.14,
+					output: 0.28,
+					cacheRead: 0.0028,
+					cacheWrite: 0,
+				},
+				contextWindow: 1000000,
+				maxTokens: 384000,
+			},
+			{
+				id: "deepseek/deepseek-v4-pro",
+				name: "DeepSeek V4 Pro",
+				reasoning: true,
+				input: ["text"],
+				cost: {
+					input: 0.435,
+					output: 0.87,
+					cacheRead: 0.003625,
+					cacheWrite: 0,
+				},
+				contextWindow: 1000000,
+				maxTokens: 384000,
+			},
+			{
+				id: "moonshotai/Kimi-K2.6",
+				name: "Kimi K2.6",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: {
+					input: 0.95,
+					output: 4,
+					cacheRead: 0.16,
+					cacheWrite: 0,
+				},
+				contextWindow: 262144,
+				maxTokens: 262144,
+			},
+		],
 	});
 }

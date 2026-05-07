@@ -3,8 +3,8 @@
   "compaction": {
     "enabled": true
   },
-  "defaultModel": "gpt-5.4-mini",
-  "defaultProvider": "github-copilot",
+  "defaultModel": "mimo-v2.5-pro",
+  "defaultProvider": "xiaomi-token-plan-sgp",
   "defaultThinkingLevel": "medium",
   "doubleEscapeAction": "none",
   "editorPaddingX": 0,
@@ -15,19 +15,22 @@
     "openai-codex/gpt-5.5",
     "deepseek/deepseek-v4-flash",
     "deepseek/deepseek-v4-pro",
-    "xiaomi/mimo-v2.5-pro",
-    "xiaomi/mimo-v2.5",
     "github-copilot/gpt-5.4-mini",
     "github-copilot/claude-haiku-4.5",
     "github-copilot/gemini-3-flash-preview",
     "github-copilot/gemini-3.1-pro-preview",
     "google/gemini-3-flash-preview",
     "google/gemini-3.1-flash-lite-preview",
-    "google/gemini-3.1-pro-preview"
+    "google/gemini-3.1-pro-preview",
+    "xiaomi-token-plan-sgp/mimo-v2.5-pro",
+    "xiaomi-token-plan-sgp/mimo-v2.5",
+    "blazeai/DeepSeek-V4-Flash-TEST",
+    "cmd/moonshotai/Kimi-K2.6",
+    "cmd/deepseek/deepseek-v4-pro",
+    "cmd/deepseek/deepseek-v4-flash"
   ],
   "extensions": [
     "+extensions\\tool-selector\\index.ts",
-    "-extensions\\powerline-footer\\index.ts",
     "-extensions\\web-reader.ts",
     "-extensions\\simplify-test.ts",
     "-extensions\\notification\\index.ts",
@@ -36,14 +39,16 @@
     "-extensions\\files.ts",
     "-extensions\\stats.ts",
     "-extensions\\git-guard.ts",
-    "-extensions\\rg-guard.ts"
+    "-extensions\\rg-guard.ts",
+    "-extensions\\pi-footer\\index.ts",
+    "-extensions\\pi-mcp-adapter\\index.ts"
   ],
   "followUpMode": "all",
   "hideThinkingBlock": true,
   "images": {
     "autoResize": true
   },
-  "lastChangelogVersion": "0.72.1",
+  "lastChangelogVersion": "0.74.0",
   "packages": [
     {
       "extensions": [
@@ -59,68 +64,14 @@
     },
     "git:github.com/raunovillberg/im-pi-eccable",
     {
-      "source": "git:https://github.com/calesennett/pi-codex-fast",
+      "source": "npm:pi-mcp-adapter",
       "extensions": [
-        "-extensions\\codex-fast.ts"
+        "+index.ts"
       ]
     },
-    {
-      "source": "git:github.com/devkade/pi-ask-tool",
-      "extensions": [
-        "-src\\index.ts"
-      ]
-    },
-    {
-      "source": "git:github.com/fluxgear/pi-thinking-steps",
-      "extensions": [
-        "-index.ts"
-      ]
-    },
-    "npm:pi-mcp-adapter",
     "npm:pi-simplify",
-    {
-      "source": "npm:pi-manage-todo-list",
-      "extensions": [
-        "-src\\index.ts"
-      ]
-    },
-    {
-      "source": "npm:pi-design-deck",
-      "extensions": [
-        "-index.ts"
-      ],
-      "skills": [
-        "-skills\\design-deck\\SKILL.md"
-      ],
-      "prompts": [
-        "-prompts\\deck-discover.md",
-        "-prompts\\deck-plan.md",
-        "-prompts\\deck.md"
-      ]
-    },
-    {
-      "source": "npm:@howaboua/pi-auto-trees",
-      "extensions": [
-        "-index.ts"
-      ]
-    },
     "git:github.com/Jon-Vii/pi-imagegen",
-    {
-      "source": "npm:pi-intercom",
-      "extensions": [
-        "-index.ts"
-      ],
-      "skills": [
-        "-skills\\pi-intercom\\SKILL.md"
-      ]
-    },
-    {
-      "source": "npm:@ff-labs/pi-fff",
-      "extensions": [
-        "-src\\index.ts"
-      ]
-    },
-    "npm:pi-subagents"
+    "npm:pi-boomerang"
   ],
   "prompts": [
     "+prompts\\commit.md"
@@ -130,8 +81,11 @@
     "-skills\\writing-git-commits\\SKILL.md",
     "-skills\\update-pi\\SKILL.md",
     "-skills\\figma-use\\SKILL.md",
-    "-skills\\agent-browser\\SKILL.md",
-    "+skills\\drawio-diagrams-enhanced\\SKILL.md"
+    "+skills\\agent-browser\\SKILL.md",
+    "-skills\\playwriter\\SKILL.md",
+    "-skills\\drawio-diagrams-enhanced\\SKILL.md",
+    "-skills\\brainstorming\\SKILL.md",
+    "-skills\\using-superpowers\\SKILL.md"
   ],
   "steeringMode": "all",
   "terminal": {
@@ -162,5 +116,6 @@
   },
   "npmCommand": [
     "bun"
-  ]
+  ],
+  "powerline": "default"
 }

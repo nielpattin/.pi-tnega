@@ -1,6 +1,6 @@
 # RACI Matrix Template
 
-Use this template when asking Claude to create a RACI (Responsible, Accountable, Consulted, Informed) matrix.
+Use this template when asking Pi to create a RACI (Responsible, Accountable, Consulted, Informed) matrix.
 
 ## RACI Definitions
 

@@ -1,0 +1,27 @@
+{
+  "name": "pi-footer",
+  "version": "0.0.1",
+  "description": "Style fixed status bar extension for pi coding agent",
+  "type": "module",
+  "files": [
+    "*.ts",
+    "*.md",
+    "*.json",
+    "bash-mode/**/*.ts",
+    "fixed-editor/**/*.ts"
+  ],
+  "keywords": [
+    "pi-package",
+    "pi",
+    "coding-agent",
+    "status-bar",
+    "extension"
+  ],
+
+  "license": "MIT",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -1,63 +1,63 @@
-# レイアウトガイドライン
+# Layout Guidelines
 
-## 1. グループ化の原則
+## 1. Grouping Principles
 
-- AWS Cloud グループを最外層とする
-- 機能単位でサブグループを作成
-- グループは横並びを基本とし、データフローに沿って配置
+- Make the AWS Cloud group the outermost layer
+- Create subgroups by functional unit
+- Arrange groups horizontally by default and place them along the data flow
 
-### 1.1. グループの階層構造
+### 1.1. Group hierarchy structure
 
 ```text
-AWS Cloud (最外層)
+AWS Cloud (outermost layer)
 ├── VPC
 │   ├── Public Subnet
-│   │   └── ALB, NAT Gateway など
+│   │   └── ALB, NAT Gateway, etc.
 │   └── Private Subnet
-│       └── ECS, RDS など
+│       └── ECS, RDS, etc.
 ├── S3
 ├── CloudWatch
-└── その他のサービス
+└── Other services
 ```
 
-## 2. 接続線のルール
+## 2. Connection line rules
 
-### 2.1. 線種の使い分け
+### 2.1. Line style usage
 
-| フロー種別 | 線種 | 用途 |
+| Flow type | Line style | Purpose |
 |-----------|------|------|
-| Ingestion Flow | 破線 | データ取り込み |
-| Query Flow | 実線 | クエリ・参照 |
-| Control Flow | 点線 | 制御・管理 |
+| Ingestion Flow | Dashed line | Data ingestion |
+| Query Flow | Solid line | Queries and references |
+| Control Flow | Dotted line | Control and management |
 
-### 2.2. 矢印の方向
+### 2.2. Arrow direction
 
-- 矢印はデータの流れる方向に従う
-- 双方向通信は双方向矢印を使用
+- Arrows should follow the direction of data flow
+- Use bidirectional arrows for two-way communication
 
-## 3. 配置の原則
+## 3. Layout principles
 
-### 3.1. 左から右へのフロー
-
-```text
-[データソース] → [処理] → [ストレージ] → [分析/可視化]
-```
-
-### 3.2. 上から下へのフロー (代替)
+### 3.1. Left-to-right flow
 
 ```text
-[ユーザー/クライアント]
-        ↓
-[ロードバランサー]
-        ↓
-[アプリケーション]
-        ↓
-[データベース]
+[Data source] -> [Processing] -> [Storage] -> [Analytics/Visualization]
 ```
 
-## 4. 視認性の確保
+### 3.2. Top-to-bottom flow (alternative)
 
-- ラベルは要素の近くに配置
-- 矢印が交差しないように配置を調整
-- 関連する要素はグループ化して近くに配置
-- 余白を適切に確保して見やすくする
+```text
+[User/Client]
+        ↓
+[Load balancer]
+        ↓
+[Application]
+        ↓
+[Database]
+```
+
+## 4. Readability
+
+- Place labels close to the elements
+- Adjust placement so arrows do not cross
+- Group related elements and place them close together
+- Leave enough whitespace to keep the diagram readable

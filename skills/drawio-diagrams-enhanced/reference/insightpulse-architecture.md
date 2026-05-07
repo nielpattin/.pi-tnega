@@ -3,7 +3,7 @@
 ## Use Case
 Create a technical architecture diagram for InsightPulse AI - a self-hosted Odoo ERP with AI-powered document processing.
 
-## Request to Claude
+## Request to Pi
 
 ```
 Create a network/system architecture diagram for InsightPulse AI with the following components:

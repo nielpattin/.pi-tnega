@@ -3,7 +3,7 @@
 ## Use Case
 Create a WBS for an Odoo ERP implementation project to replace SAP Concur.
 
-## Request to Claude
+## Request to Pi
 
 ```
 Create a Work Breakdown Structure (WBS) for an Odoo ERP implementation project with the following structure:

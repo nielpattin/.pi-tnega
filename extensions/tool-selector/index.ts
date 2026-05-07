@@ -139,6 +139,8 @@ export default function toolsExtension(pi: ExtensionAPI) {
 
 	// Restore state on session start
 	pi.on("session_start", async (_event, ctx) => {
-		restoreFromBranch(ctx);
+		setTimeout(() => {
+			restoreFromBranch(ctx);
+		}, 0);
 	});
 }

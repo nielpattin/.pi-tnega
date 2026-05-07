@@ -1,40 +1,40 @@
-# AWS アイコンとサービス名
+# AWS Icons and Service Names
 
-## 1. 正しいサービス名の規則
+## 1. Rules for Correct Service Names
 
-| 接頭辞 | 例 |
+| Prefix | Example |
 |--------|-----|
 | Amazon | Amazon ECS, Amazon ECR, Amazon S3, Amazon RDS, Amazon CloudWatch |
 | AWS | AWS Lambda, AWS IAM, AWS CloudFormation, AWS Step Functions |
 | Elastic | Elastic Load Balancing |
 
-- 略称のみの使用は避ける (ECS → Amazon ECS)
-- 正式名称を使用する
+- Avoid using abbreviations alone (ECS -> Amazon ECS)
+- Use official names
 
-## 2. アイコンスタイル
+## 2. Icon Styles
 
-### 2.1. リソースアイコン (基本形式)
+### 2.1. Resource Icon (Basic Form)
 
 ```xml
 shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.{service_name};
 ```
 
-### 2.2. プロダクトアイコン
+### 2.2. Product Icon
 
 ```xml
 shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 ```
 
-### 2.3. 注意事項
+### 2.3. Notes
 
-- `mxgraph.aws4.*` を使用 (aws3 は古いため非推奨)
-- サービス名は snake_case で指定
+- Use `mxgraph.aws4.*` (aws3 is old and not recommended)
+- Specify service names in snake_case
 
-## 3. カテゴリ別アイコン
+## 3. Icons by Category
 
-### 3.1. Compute (コンピューティング)
+### 3.1. Compute
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon EC2 | mxgraph.aws4.ec2 |
 | EC2 Instance | mxgraph.aws4.instance2 |
@@ -64,9 +64,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Elastic Fabric Adapter | mxgraph.aws4.elastic_fabric_adapter |
 | NICE DCV | mxgraph.aws4.nice_dcv |
 
-### 3.2. Containers (コンテナ)
+### 3.2. Containers
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon ECS | mxgraph.aws4.ecs |
 | ECS Task | mxgraph.aws4.ecs_task |
@@ -81,9 +81,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS App2Container | mxgraph.aws4.app2container |
 | Red Hat OpenShift on AWS | mxgraph.aws4.red_hat_openshift |
 
-### 3.3. Storage (ストレージ)
+### 3.3. Storage
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon S3 | mxgraph.aws4.s3 |
 | S3 Bucket | mxgraph.aws4.bucket |
@@ -110,9 +110,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Elastic Disaster Recovery | mxgraph.aws4.elastic_disaster_recovery |
 | AWS Snow Family | mxgraph.aws4.snow_family |
 
-### 3.4. Database (データベース)
+### 3.4. Database
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon RDS | mxgraph.aws4.rds |
 | RDS DB Instance | mxgraph.aws4.db_instance |
@@ -154,9 +154,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Amazon QLDB | mxgraph.aws4.qldb |
 | Generic Database | mxgraph.aws4.database |
 
-### 3.5. Networking (ネットワーク)
+### 3.5. Networking
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon VPC | mxgraph.aws4.vpc |
 | Internet Gateway | mxgraph.aws4.internet_gateway |
@@ -183,7 +183,7 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Network Load Balancer | mxgraph.aws4.network_load_balancer |
 | Gateway Load Balancer | mxgraph.aws4.gateway_load_balancer |
 | Classic Load Balancer | mxgraph.aws4.classic_load_balancer |
-| ELB (旧) | mxgraph.aws4.elb |
+| ELB (Legacy) | mxgraph.aws4.elb |
 | Amazon API Gateway | mxgraph.aws4.api_gateway |
 | API Gateway Endpoint | mxgraph.aws4.endpoint |
 | AWS Direct Connect | mxgraph.aws4.direct_connect |
@@ -199,12 +199,12 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Amazon VPC Lattice | mxgraph.aws4.vpc_lattice |
 | Verified Access | mxgraph.aws4.verified_access |
 
-### 3.6. Security, Identity & Compliance (セキュリティ)
+### 3.6. Security, Identity & Compliance
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS IAM | mxgraph.aws4.identity_and_access_management |
-| IAM (短縮) | mxgraph.aws4.iam |
+| IAM (Short form) | mxgraph.aws4.iam |
 | IAM Role | mxgraph.aws4.role |
 | IAM Permissions | mxgraph.aws4.permissions |
 | IAM Identity Center | mxgraph.aws4.iam_identity_center |
@@ -233,9 +233,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Amazon Verified Permissions | mxgraph.aws4.verified_permissions |
 | SAML Token | mxgraph.aws4.saml_token |
 
-### 3.7. Analytics (分析)
+### 3.7. Analytics
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon Athena | mxgraph.aws4.athena |
 | Amazon CloudSearch | mxgraph.aws4.cloudsearch |
@@ -258,7 +258,7 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | EMR HDFS Cluster | mxgraph.aws4.hdfs_cluster |
 | EMR Cluster | mxgraph.aws4.cluster |
 | Amazon OpenSearch | mxgraph.aws4.opensearch |
-| Elasticsearch (旧) | mxgraph.aws4.elasticsearch_service |
+| Elasticsearch (Legacy) | mxgraph.aws4.elasticsearch_service |
 | Amazon QuickSight | mxgraph.aws4.quicksight |
 | AWS Data Pipeline | mxgraph.aws4.data_pipeline |
 | Amazon MSK | mxgraph.aws4.msk |
@@ -271,9 +271,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Amazon Managed Grafana | mxgraph.aws4.managed_grafana |
 | Amazon Managed Prometheus | mxgraph.aws4.managed_prometheus |
 
-### 3.8. Machine Learning & AI (機械学習・AI)
+### 3.8. Machine Learning & AI
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon SageMaker | mxgraph.aws4.sagemaker |
 | SageMaker Notebook | mxgraph.aws4.sagemaker_notebook |
@@ -315,11 +315,11 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | PyTorch on AWS | mxgraph.aws4.pytorch |
 | Deep Learning AMIs | mxgraph.aws4.deep_learning_amis |
 | Deep Learning Containers | mxgraph.aws4.deep_learning_containers |
-| Machine Learning (汎用) | mxgraph.aws4.machine_learning |
+| Machine Learning (General) | mxgraph.aws4.machine_learning |
 
-### 3.9. Application Integration (アプリケーション統合)
+### 3.9. Application Integration
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon SNS | mxgraph.aws4.sns |
 | SNS Topic | mxgraph.aws4.topic |
@@ -342,9 +342,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Express Workflows | mxgraph.aws4.express_workflows |
 | Amazon Managed Workflows for Apache Airflow | mxgraph.aws4.managed_workflows_apache_airflow |
 
-### 3.10. Management & Governance (管理・ガバナンス)
+### 3.10. Management & Governance
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon CloudWatch | mxgraph.aws4.cloudwatch |
 | CloudWatch (v2) | mxgraph.aws4.cloudwatch_2 |
@@ -382,9 +382,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Chatbot | mxgraph.aws4.chatbot |
 | AWS Application Auto Scaling | mxgraph.aws4.application_auto_scaling |
 
-### 3.11. Developer Tools (開発者ツール)
+### 3.11. Developer Tools
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS CodeBuild | mxgraph.aws4.codebuild |
 | AWS CodePipeline | mxgraph.aws4.codepipeline |
@@ -404,9 +404,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Tools and SDKs | mxgraph.aws4.tools_and_sdks |
 | AWS SAM | mxgraph.aws4.serverless_application_model |
 
-### 3.12. Front-end Web & Mobile (フロントエンド)
+### 3.12. Front-end Web & Mobile
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS Amplify | mxgraph.aws4.amplify |
 | AWS AppSync | mxgraph.aws4.appsync |
@@ -415,9 +415,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Device Farm | mxgraph.aws4.device_farm |
 | Amazon Pinpoint | mxgraph.aws4.pinpoint |
 
-### 3.13. Customer Engagement (カスタマーエンゲージメント)
+### 3.13. Customer Engagement
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon Pinpoint | mxgraph.aws4.pinpoint |
 | Amazon SES | mxgraph.aws4.simple_email_service |
@@ -426,9 +426,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Amazon Connect Wisdom | mxgraph.aws4.connect_wisdom |
 | Amazon Connect Voice ID | mxgraph.aws4.connect_voice_id |
 
-### 3.14. Business Applications (ビジネスアプリケーション)
+### 3.14. Business Applications
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon Chime | mxgraph.aws4.chime |
 | Amazon Chime SDK | mxgraph.aws4.chime_sdk |
@@ -437,9 +437,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Supply Chain | mxgraph.aws4.supply_chain |
 | AWS Wickr | mxgraph.aws4.wickr |
 
-### 3.15. End User Computing (エンドユーザーコンピューティング)
+### 3.15. End User Computing
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon WorkSpaces | mxgraph.aws4.workspaces |
 | Amazon WorkSpaces Web | mxgraph.aws4.workspaces_web |
@@ -451,7 +451,7 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 
 ### 3.16. Internet of Things (IoT)
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS IoT Core | mxgraph.aws4.iot_core |
 | IoT MQTT Protocol | mxgraph.aws4.mqtt_protocol |
@@ -489,9 +489,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS IoT TwinMaker | mxgraph.aws4.iot_twinmaker |
 | FreeRTOS | mxgraph.aws4.freertos |
 
-### 3.17. Migration & Transfer (移行・転送)
+### 3.17. Migration & Transfer
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS DMS | mxgraph.aws4.database_migration_service |
 | DMS Database Migration Workflow | mxgraph.aws4.database_migration_workflow_job |
@@ -509,9 +509,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | DataSync Agent | mxgraph.aws4.datasync_agent |
 | AWS Mainframe Modernization | mxgraph.aws4.mainframe_modernization |
 
-### 3.18. Media Services (メディアサービス)
+### 3.18. Media Services
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS Elemental MediaConvert | mxgraph.aws4.mediaconvert |
 | AWS Elemental MediaLive | mxgraph.aws4.medialive |
@@ -530,18 +530,18 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Amazon Nimble Studio | mxgraph.aws4.nimble_studio |
 | AWS Deadline Cloud | mxgraph.aws4.deadline_cloud |
 
-### 3.19. Game Tech (ゲーム開発)
+### 3.19. Game Tech
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon GameLift | mxgraph.aws4.gamelift |
 | Amazon GameSparks | mxgraph.aws4.gamesparks |
 | Open 3D Engine | mxgraph.aws4.open_3d_engine |
 | Amazon Lumberyard | mxgraph.aws4.lumberyard |
 
-### 3.20. Cost Management (コスト管理)
+### 3.20. Cost Management
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS Cost Explorer | mxgraph.aws4.cost_explorer |
 | AWS Budgets | mxgraph.aws4.budgets |
@@ -551,28 +551,28 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | AWS Billing Conductor | mxgraph.aws4.billing_conductor |
 | AWS Application Cost Profiler | mxgraph.aws4.application_cost_profiler |
 
-### 3.21. Blockchain (ブロックチェーン)
+### 3.21. Blockchain
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon Managed Blockchain | mxgraph.aws4.managed_blockchain |
 | Amazon QLDB | mxgraph.aws4.qldb |
 
-### 3.22. Quantum Technologies (量子技術)
+### 3.22. Quantum Technologies
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | Amazon Braket | mxgraph.aws4.braket |
 
-### 3.23. Satellite (衛星)
+### 3.23. Satellite
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS Ground Station | mxgraph.aws4.ground_station |
 
-### 3.24. Robotics (ロボティクス)
+### 3.24. Robotics
 
-| サービス | resIcon |
+| Service | resIcon |
 |----------|---------|
 | AWS RoboMaker | mxgraph.aws4.robomaker |
 | RoboMaker Simulation | mxgraph.aws4.robomaker_simulation |
@@ -580,9 +580,9 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | RoboMaker Fleet Management | mxgraph.aws4.robomaker_fleet_management |
 | RoboMaker Cloud Extension | mxgraph.aws4.robomaker_cloud_extension |
 
-### 3.25. General/Generic Icons (汎用アイコン)
+### 3.25. General/Generic Icons
 
-| 説明 | resIcon |
+| Description | resIcon |
 |------|---------|
 | Users | mxgraph.aws4.users |
 | User | mxgraph.aws4.user |
@@ -614,17 +614,17 @@ shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.{service_name};
 | Disk | mxgraph.aws4.disk |
 | External SDK | mxgraph.aws4.external_sdk |
 
-## 4. グループアイコン
+## 4. Group Icons
 
-### 4.1. 基本構文
+### 4.1. Basic Syntax
 
 ```xml
 shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.{group_name};
 ```
 
-### 4.2. グループアイコン一覧
+### 4.2. Group Icon List
 
-| 説明 | grIcon |
+| Description | grIcon |
 |------|--------|
 | AWS Cloud | mxgraph.aws4.group_aws_cloud |
 | AWS Cloud (Alt) | mxgraph.aws4.group_aws_cloud_alt |
@@ -645,7 +645,7 @@ shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.{group_name};
 | AWS IoT Greengrass Deployment | mxgraph.aws4.group_iot_greengrass_deployment |
 | Server Contents | mxgraph.aws4.group_server_contents |
 
-### 4.3. 使用例
+### 4.3. Usage Examples
 
 ```xml
 <!-- AWS Cloud -->
@@ -664,11 +664,11 @@ shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.{group_name};
 <mxCell style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;fillColor=#E6F2F8;..." />
 ```
 
-## 5. アイコン検索スクリプト
+## 5. Icon Search Script
 
-[scripts/find_aws_icon.py](../scripts/find_aws_icon.py) を使用して効率的に検索可能。
+Use [scripts/find_aws_icon.py](../scripts/find_aws_icon.py) to search efficiently.
 
-## 6. 参考リンク
+## 6. Reference Links
 
 - [draw.io AWS Diagrams Blog](https://www.drawio.com/blog/aws-diagrams)
 - [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/)

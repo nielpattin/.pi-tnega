@@ -3,7 +3,7 @@
 ## Use Case
 Create a cross-functional flowchart for BIR Form 1601-C monthly withholding tax filing process for a Finance Shared Service Center.
 
-## Request to Claude
+## Request to Pi
 
 ```
 Create a cross-functional flowchart (swimlane diagram) for BIR Form 1601-C monthly withholding tax filing with these departments:

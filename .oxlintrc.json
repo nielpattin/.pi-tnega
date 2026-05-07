@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["skills/**", "**/tests/**", "preciseVerboseReporter.ts"],
   "options": {
     "typeAware": true,
     "typeCheck": true
@@ -12,7 +13,9 @@
   "categories": {
     "correctness": "error"
   },
-  "rules": {},
+  "rules": {
+    "no-control-regex": "off"
+  },
   "env": {
     "builtin": true
   }

@@ -6,7 +6,7 @@ description: Create professional draw.io (diagrams.net) diagrams in XML format (
 # Enhanced Draw.io Diagram Creation Skill
 # with PMP/PMBOK Integration & Visual Asset Libraries
 
-This skill enables Claude to create professional, pixel-perfect diagrams in draw.io's native XML format with enterprise-grade capabilities including project management methodologies, extensive icon libraries, and industry-standard templates.
+This skill enables Pi to create professional, pixel-perfect diagrams in draw.io's native XML format with enterprise-grade capabilities including project management methodologies, extensive icon libraries, and industry-standard templates.
 
 ## Core Capabilities
 
@@ -34,7 +34,7 @@ This skill enables Claude to create professional, pixel-perfect diagrams in draw
 
 ### 3. Visual Asset Libraries Available
 
-Claude can reference and incorporate shapes from extensive custom libraries:
+Pi can reference and incorporate shapes from extensive custom libraries:
 
 **Icon & Symbol Libraries**:
 - Material Design Icons
@@ -61,7 +61,7 @@ Claude can reference and incorporate shapes from extensive custom libraries:
 - Templates & Building Blocks
 
 **How to Use Custom Libraries**:
-When generating diagrams that would benefit from specific icons, Claude can note which libraries to enable:
+When generating diagrams that would benefit from specific icons, Pi can note which libraries to enable:
 ```
 To use this diagram optimally, open it with these custom libraries:
 https://app.diagrams.net/?clibs=Uhttps://jgraph.github.io/drawio-libs/libs/templates.xml
@@ -72,7 +72,7 @@ https://app.diagrams.net/?clibs=Uhttps://jgraph.github.io/drawio-libs/libs/templ
 Draw.io files are XML-based with the `.drawio` extension (or `.xml`). The basic structure is:
 
 ```xml
-<mxfile host="app.diagrams.net" modified="[timestamp]" agent="Claude" version="24.7.17">
+<mxfile host="app.diagrams.net" modified="[timestamp]" agent="Pi" version="24.7.17">
   <diagram id="[unique-id]" name="Page-1">
     <mxGraphModel dx="1434" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>

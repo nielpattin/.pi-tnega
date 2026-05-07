@@ -7,7 +7,10 @@
   "mcpServers": {
     "exa": {
       "command": "npx",
-      "args": ["-y", "exa-mcp-server"],
+      "args": [
+        "-y",
+        "exa-mcp-server"
+      ],
       "env": {
         "EXA_API_KEY": "${EXA_API_KEY}"
       },
@@ -19,7 +22,15 @@
     },
     "aspire": {
       "command": "aspire",
-      "args": ["agent", "mcp"]
+      "args": [
+        "agent",
+        "mcp"
+      ]
+    },
+     "drawio": {
+      "command": "npx",
+      "args": ["@next-ai-drawio/mcp-server@latest"],
+      "enable": false
     }
   }
 }

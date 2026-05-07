@@ -1,6 +1,6 @@
 # Project Charter Template
 
-Use this template when asking Claude to create a project charter.
+Use this template when asking Pi to create a project charter.
 
 ## Template Request Format
 
