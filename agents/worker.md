@@ -1,4 +1,5 @@
 ---
+enabled: false
 name: worker
 description: Implementation-focused subagent for scoped coding tasks
 tools: read, write, bash

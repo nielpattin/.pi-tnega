@@ -1,4 +1,5 @@
 ---
+enabled: false
 name: "scout"
 description: "Recon subagent for discovery, context gathering, and impact mapping"
 model: "xiaomi/mimo-v2.5"
