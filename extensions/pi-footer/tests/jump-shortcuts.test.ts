@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { KEYBINDINGS } from "/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings";
+import { KEYBINDINGS } from "../../../node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js";
 import { isSupportedSuperShortcut, matchesConfiguredShortcut, shortcutConflictKey } from "../shortcuts.ts";
 
 const source = readFileSync(new URL("../index.ts", import.meta.url), "utf-8");
@@ -44,7 +44,7 @@ function powerlineDefaults(): Map<string, string> {
    return defaults;
 }
 
-test("chat jump shortcuts are configurable and route through fixed editor scrolling", () => {
+await test("chat jump shortcuts are configurable and route through fixed editor scrolling", () => {
    const defaults = powerlineDefaults();
    assert.equal(defaults.get("jumpPreviousUserMessage"), "ctrl+shift+u");
    assert.equal(defaults.get("jumpNextUserMessage"), "ctrl+shift+i");
@@ -85,7 +85,7 @@ test("chat jump shortcuts are configurable and route through fixed editor scroll
    assert.match(source, /jumpToChatMessage\(ctx, action\.action\.role, action\.action\.direction\)/);
 });
 
-test("super shortcut matching rejects plain keys and unsupported command aliases", () => {
+await test("super shortcut matching rejects plain keys and unsupported command aliases", () => {
    assert.equal(matchesConfiguredShortcut("c", "super+c"), false);
    assert.equal(matchesConfiguredShortcut("G", "super+shift+g"), false);
    assert.equal(matchesConfiguredShortcut("\x1b[A", "super+up"), false);
@@ -100,7 +100,7 @@ test("super shortcut matching rejects plain keys and unsupported command aliases
    assert.equal(shortcutConflictKey("super+shift+end"), "super+shift+down");
 });
 
-test("editor submits follow the fixed chat viewport to bottom", () => {
+await test("editor submits follow the fixed chat viewport to bottom", () => {
    assert.match(source, /function followSubmittedEditorToBottom\(\): void/);
    assert.match(source, /onEditorSubmit: \(\) => followSubmittedEditorToBottom\(\)/);
    assert.match(source, /Object\.defineProperty\(editor, "onSubmit"/);
@@ -108,7 +108,7 @@ test("editor submits follow the fixed chat viewport to bottom", () => {
    assert.match(source, /keybindings\.matches\(data, "app\.message\.followUp"\)/);
 });
 
-test("thinking level changes invalidate powerline status rendering", () => {
+await test("thinking level changes invalidate powerline status rendering", () => {
    assert.match(source, /let currentThinkingLevel: string \| null = null/);
    assert.match(
       source,
@@ -124,7 +124,7 @@ test("thinking level changes invalidate powerline status rendering", () => {
    );
 });
 
-test("context usage changes repaint from live streaming message usage", () => {
+await test("context usage changes repaint from live streaming message usage", () => {
    assert.match(source, /const CONTEXT_STATUS_RENDER_MS = 250/);
    assert.match(source, /function getUsageTokenTotal\(usage: SessionAssistantUsage\): number/);
    assert.match(source, /const totalTokens = "totalTokens" in usage && typeof usage\.totalTokens === "number"/);
@@ -169,7 +169,7 @@ test("context usage changes repaint from live streaming message usage", () => {
    );
 });
 
-test("extension status changes invalidate powerline status rendering", () => {
+await test("extension status changes invalidate powerline status rendering", () => {
    assert.match(source, /let forceNextLayoutRecompute = false/);
    assert.match(source, /let restoreFooterStatusRepaintHook: \(\(\) => void\) \| null = null/);
    assert.match(
@@ -200,7 +200,7 @@ test("extension status changes invalidate powerline status rendering", () => {
    assert.match(source, /restoreFooterStatusRepaintHook\?\.\(\);\n\s+restoreFooterStatusRepaintHook = null;/);
 });
 
-test("fixed editor captures Pi status messages with the editor cluster", () => {
+await test("fixed editor captures Pi status messages with the editor cluster", () => {
    assert.match(source, /let fixedStatusContainer: any = null/);
    assert.match(source, /const statusContainerCandidate = tuiChildren\[editorContainerMatch\.index - 2\] \?\? null/);
    assert.match(
@@ -219,16 +219,16 @@ test("fixed editor captures Pi status messages with the editor cluster", () => {
    assert.match(source, /fixedStatusContainer = null/);
 });
 
-test("shutdown cleanup resets terminal modes even before compositor install", () => {
+await test("shutdown cleanup resets terminal modes even before compositor install", () => {
    assert.match(source, /import \{ emergencyTerminalModeReset, TerminalSplitCompositor \}/);
    assert.match(source, /const hadCompositor = fixedEditorCompositor !== null/);
    assert.match(source, /if \(!hadCompositor && options\?\.resetExtendedKeyboardModes\)/);
    assert.match(source, /process\.stdout\.write\(emergencyTerminalModeReset\(\)\)/);
 });
 
-test("powerline shortcut defaults do not claim reserved Pi shortcuts", () => {
+await test("powerline shortcut defaults do not claim reserved Pi shortcuts", () => {
    const reservedKeys = new Map<string, string>();
-   for (const [id, definition] of Object.entries(KEYBINDINGS)) {
+   for (const [id, definition] of Object.entries(KEYBINDINGS) as Array<[string, { defaultKeys?: string | string[] }]>) {
       const keys =
          definition.defaultKeys === undefined
             ? []
@@ -246,7 +246,7 @@ test("powerline shortcut defaults do not claim reserved Pi shortcuts", () => {
    }
 });
 
-test("powerline fallback routing rejects reserved Pi shortcut defaults", () => {
+await test("powerline fallback routing rejects reserved Pi shortcut defaults", () => {
    assert.doesNotMatch(source, /KeybindingsManager/);
    assert.match(source, /TUI_KEYBINDINGS/);
    assert.match(source, /const APP_RESERVED_SHORTCUTS = \[/);
@@ -267,7 +267,7 @@ test("powerline fallback routing rejects reserved Pi shortcut defaults", () => {
    );
 });
 
-test("powerline shortcuts have terminal-input fallback routing", () => {
+await test("powerline shortcuts have terminal-input fallback routing", () => {
    assert.match(source, /function getPowerlineShortcutAction\(data: string\): PowerlineShortcutAction \| null/);
    assert.match(source, /matchesConfiguredShortcut\(data, resolvedShortcuts\.stashHistory\)/);
    assert.match(source, /matchesConfiguredShortcut\(data, resolvedShortcuts\.copyEditor\)/);

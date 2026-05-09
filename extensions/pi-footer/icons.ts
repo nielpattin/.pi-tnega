@@ -1,5 +1,13 @@
 import { loadThemeConfig } from "./theme.ts";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function typedKeys<T extends object>(obj: T): Array<keyof T & string> {
+   return Object.keys(obj) as Array<keyof T & string>;
+}
+
 export interface IconSet {
    pi: string;
    model: string;
@@ -94,14 +102,13 @@ export const ASCII_ICONS: IconSet = {
 type PartialIconSet = Partial<IconSet>;
 
 function sanitizeUserIconOverrides(value: unknown): PartialIconSet {
-   if (typeof value !== "object" || value === null || Array.isArray(value)) {
+   if (!isRecord(value)) {
       return {};
    }
 
    const sanitized: PartialIconSet = {};
-   const validKeys = Object.keys(NERD_ICONS) as Array<keyof IconSet>;
-   for (const key of validKeys) {
-      const icon = (value as Record<string, unknown>)[key];
+   for (const key of typedKeys(NERD_ICONS)) {
+      const icon = value[key];
       if (typeof icon === "string") {
          sanitized[key] = icon;
       }

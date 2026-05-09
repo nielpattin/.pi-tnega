@@ -3,9 +3,9 @@
    "compaction": {
       "enabled": false
    },
-   "defaultModel": "gpt-5.4-mini",
-   "defaultProvider": "github-copilot",
-   "defaultThinkingLevel": "medium",
+   "defaultModel": "deepseek/deepseek-v4-pro",
+   "defaultProvider": "cmd-code",
+   "defaultThinkingLevel": "high",
    "doubleEscapeAction": "none",
    "editorPaddingX": 0,
    "enableSkillCommands": true,
@@ -25,7 +25,9 @@
       "cmd-code/moonshotai/Kimi-K2.6",
       "cmd-code/deepseek/deepseek-v4-pro",
       "cmd-code/deepseek/deepseek-v4-flash",
-      "freemodel/gpt-5.5"
+      "freemodel/gpt-5.5",
+      "openrouter/baidu/cobuddy:free",
+      "openrouter/inclusionai/ring-2.6-1t:free"
    ],
    "extensions": [
       "+extensions\\tool-selector\\index.ts",
@@ -43,7 +45,7 @@
       "+extensions\\pi-mcp-adapter\\index.ts"
    ],
    "followUpMode": "all",
-   "hideThinkingBlock": false,
+   "hideThinkingBlock": true,
    "images": {
       "autoResize": true
    },

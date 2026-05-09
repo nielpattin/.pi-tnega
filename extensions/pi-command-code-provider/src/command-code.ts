@@ -268,7 +268,7 @@ function resolveApiKey(config: ExtensionConfig, options?: SimpleStreamOptions): 
 function buildHeaders(config: ExtensionConfig, apiKey: string, options?: SimpleStreamOptions): Record<string, string> {
    const headers: Record<string, string> = {
       ...config.headers,
-      ...(options?.headers ?? {}),
+      ...options?.headers,
       "Content-Type": "application/json",
       Accept: "text/event-stream, application/json",
       "X-Command-Code-Version": config.commandCodeVersion,
@@ -398,7 +398,7 @@ function decodeXmlEntities(value: string): string {
 function parseParameterValue(value: string): unknown {
    const decoded = decodeXmlEntities(value.trim());
    if (!decoded) return "";
-   if (/^(?:true|false|null|-?\d+(?:\.\d+)?|[\[{])/.test(decoded)) {
+   if (/^(?:true|false|null|-?\d+(?:\.\d+)?|[[{])/.test(decoded)) {
       try {
          return JSON.parse(decoded);
       } catch {
@@ -766,7 +766,7 @@ function emitResponse(
    stream.end(output);
 }
 
-function parseSseLine(line: string): unknown | undefined {
+function parseSseLine(line: string): unknown {
    const trimmed = line.trim();
    if (!trimmed) return undefined;
    const jsonText = trimmed.startsWith("data:") ? trimmed.slice(5).trim() : trimmed;

@@ -30,7 +30,7 @@ export function addStashHistoryEntry(state: StashState, text: string): void {
 }
 
 export function copyTextToClipboard(ctx: any, text: string, successMessage?: string): void {
-   copyToClipboard(text);
+   void copyToClipboard(text);
    if (successMessage) {
       ctx.ui.notify(successMessage, "info");
    }
@@ -148,11 +148,11 @@ export function isStashShortcutInput(data: string): boolean {
 
    return (
       data === "ß" ||
-      data === "\x1bs" ||
-      data === "\x1bS" ||
-      /^\x1b\[(?:83|115)(?::\d*)?(?::\d*)?;3(?::\d+)?u$/.test(data) ||
-      data === "\x1b[27;3;115~" ||
-      data === "\x1b[27;3;83~" ||
+      data === "\u001bs" ||
+      data === "\u001bS" ||
+      /^\u001b\[(?:83|115)(?::\d*)?(?::\d*)?;3(?::\d+)?u$/.test(data) ||
+      data === "\u001b[27;3;115~" ||
+      data === "\u001b[27;3;83~" ||
       matchesKey(data, "alt+s")
    );
 }
@@ -161,9 +161,9 @@ export function isPromptHistoryShortcutInput(data: string, resolvedShortcuts: Po
    return (
       matchesConfiguredShortcut(data, resolvedShortcuts.stashHistory) ||
       (resolvedShortcuts.stashHistory === "ctrl+alt+h" &&
-         (/^\x1b\[104(?::\d*)?(?::\d*)?;7(?::\d+)?u$/.test(data) ||
-            data === "\x1b[27;7;104~" ||
-            data === "\x1b[27;7;72~"))
+         (/^\u001b\[104(?::\d*)?(?::\d*)?;7(?::\d+)?u$/.test(data) ||
+            data === "\u001b[27;7;104~" ||
+            data === "\u001b[27;7;72~"))
    );
 }
 

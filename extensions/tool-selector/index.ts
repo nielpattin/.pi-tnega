@@ -18,6 +18,10 @@ interface ToolsState {
    enabledTools: string[];
 }
 
+function isToolsState(value: unknown): value is ToolsState {
+   return typeof value === "object" && value !== null && "enabledTools" in value;
+}
+
 export default function toolsExtension(pi: ExtensionAPI) {
    // Track enabled tools
    let enabledTools: Set<string> = new Set();
@@ -57,8 +61,8 @@ export default function toolsExtension(pi: ExtensionAPI) {
 
       for (const entry of branchEntries) {
          if (entry.type === "custom" && entry.customType === "tools-config") {
-            const data = entry.data as ToolsState | undefined;
-            if (data?.enabledTools) {
+            const data = entry.data;
+            if (isToolsState(data) && data.enabledTools) {
                savedTools = data.enabledTools;
             }
          }

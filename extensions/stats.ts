@@ -177,7 +177,8 @@ async function loadUsageDataset(): Promise<UsageDataset> {
       for (const line of text.split(/\r?\n/)) {
          if (!line.trim()) continue;
          try {
-            const entry = JSON.parse(line) as UsageEntry;
+            const entry = JSON.parse(line);
+            if (typeof entry !== "object" || entry === null) continue;
             if (entry.type !== "message" || entry.message?.role !== "assistant" || !entry.message.usage) continue;
             if (typeof entry.message.provider === "string" && entry.message.provider.length > 0) {
                providers.add(entry.message.provider);

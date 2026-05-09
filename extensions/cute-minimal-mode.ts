@@ -204,7 +204,7 @@ export default async function (pi: ExtensionAPI) {
 
       renderCall(args, theme, _context) {
          const command = args.command || "??";
-         const timeout = args.timeout as number | undefined;
+         const timeout = args.timeout;
          const timeoutSuffix = timeout ? theme.fg("muted", ` (timeout ${timeout}s)`) : "";
 
          return new Text(theme.fg("toolTitle", theme.bold(`${badges.bash} $ ${command}`)) + timeoutSuffix, 0, 0);

@@ -51,14 +51,14 @@ function findUnsafeRgReason(command: string): string | null {
 
       const segment: string[] = [];
       for (let j = i; j < tokens.length; j++) {
-         const token = tokens[j]!;
+         const token = tokens[j];
          if (j > i && isCommandSeparator(token)) break;
          segment.push(token);
       }
 
       const positional: string[] = [];
       for (let j = 1; j < segment.length; j++) {
-         const token = segment[j]!;
+         const token = segment[j];
          if (isOptionToken(token)) {
             const previous = segment[j - 1];
             if (previous === "-g" || previous === "--glob" || previous === "-t" || previous === "--type") {
@@ -87,21 +87,25 @@ function findUnsafeRgReason(command: string): string | null {
 
 export default function (pi: ExtensionAPI) {
    pi.on("tool_call", async (event) => {
-      if (!isToolCallEventType("bash", event)) return;
+      let result: { block: boolean; reason: string } | undefined;
+      if (!isToolCallEventType("bash", event)) return result;
 
       const command = event.input.command;
-      if (!command || !/\brg\b/.test(command)) return;
+      if (!command || !/\brg\b/.test(command)) return result;
 
       const reason = findUnsafeRgReason(command);
-      if (!reason) return;
+      if (reason) {
+         result = {
+            block: true,
+            reason:
+               `Blocked unsafe rg command (${reason}). ` +
+               `Use rg only with a narrow path or explicit glob/type filter. ` +
+               `Do not search from '.', '/', '~', or a drive root. ` +
+               `Prefer ls/find/read first, then run a scoped rg like 'rg -n "pattern" src' or 'rg -n -g "*.ts" "pattern"'.`,
+         };
+      }
 
-      return {
-         block: true,
-         reason:
-            `Blocked unsafe rg command (${reason}). ` +
-            `Use rg only with a narrow path or explicit glob/type filter. ` +
-            `Do not search from '.', '/', '~', or a drive root. ` +
-            `Prefer ls/find/read first, then run a scoped rg like 'rg -n "pattern" src' or 'rg -n -g "*.ts" "pattern"'.`,
-      };
+      return result;
    });
+   return;
 }

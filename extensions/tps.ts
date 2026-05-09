@@ -225,7 +225,7 @@ export default function tpsExtension(pi: ExtensionAPI) {
       }
 
       // Store this message to count its tokens later (only current turn's messages)
-      currentTiming.assistantMessages.push(event.message as AssistantMessage);
+      currentTiming.assistantMessages.push(event.message);
    });
 
    // Calculate and display stats when agent loop ends

@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 
 const source = readFileSync(new URL("../index.ts", import.meta.url), "utf-8");
 
-test("stash shortcut supports macOS Option+S character input", () => {
+await test("stash shortcut supports macOS Option+S character input", () => {
    assert.match(source, /isKeyRelease, matchesKey, type AutocompleteProvider/);
    assert.match(source, /pi\.registerShortcut\("alt\+s"/);
    assert.match(source, /function isStashShortcutInput\(data: string\): boolean/);

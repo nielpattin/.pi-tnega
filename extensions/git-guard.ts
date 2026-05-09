@@ -152,18 +152,19 @@ export default function (pi: ExtensionAPI) {
    };
 
    pi.on("tool_call", async (event) => {
+      let result: { block: boolean; reason: string } | undefined;
       if (event.toolName !== "bash") {
-         return;
+         return result;
       }
       const command = (event.input as { command?: string }).command ?? "";
       const detected = detectInteractiveGitCommand(command);
-      if (!detected) {
-         return;
+      if (detected) {
+         result = {
+            block: true,
+            reason: `${INTERACTIVE_GIT_WARNING_PREFIX}: ${detected.reason} ${detected.suggestion}`,
+         };
       }
-      return {
-         block: true,
-         reason: `${INTERACTIVE_GIT_WARNING_PREFIX}: ${detected.reason} ${detected.suggestion}`,
-      };
+      return result;
    });
 
    // Warn on dirty repo at session start, but defer it so startup avoids immediate git work.

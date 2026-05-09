@@ -1,7 +1,8 @@
 ## Validation (Project Scope)
 
-- Use `bun run typecheck && echo TYPECHECK_OK` to check types.
 - Use `bun lint` for linting.
+- Use `bun test` for testing.
+- Use `bun check` for lint, type, and test checks.
 
 ## Behavior
 

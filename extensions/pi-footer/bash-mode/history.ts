@@ -56,9 +56,8 @@ export function readProjectHistory(cwd: string): PersistedHistoryEntry[] {
    try {
       const parsed = JSON.parse(readFileSync(filePath, "utf8"));
       if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return [];
-      return normalizePersistedEntries((parsed as { entries?: unknown }).entries).sort(
-         (a, b) => b.timestamp - a.timestamp,
-      );
+      if (!("entries" in parsed)) return [];
+      return normalizePersistedEntries(parsed.entries).sort((a, b) => b.timestamp - a.timestamp);
    } catch (error) {
       // Project history is a best-effort cache. If it is unreadable or malformed,
       // bash mode should keep working instead of failing command entry entirely.

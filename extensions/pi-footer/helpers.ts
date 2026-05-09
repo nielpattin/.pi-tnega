@@ -60,14 +60,14 @@ export const DEFAULT_SHORTCUTS: PowerlineShortcuts = {
    jumpNextUserMessage: "ctrl+shift+i",
    jumpPreviousLlmMessage: "ctrl+alt+,",
    jumpNextLlmMessage: "ctrl+alt+.",
-   jumpChatBottom: "ctrl+shift+g",
+   jumpChatBottom: "",
    scrollChatUp: "super+up",
    scrollChatDown: "super+down",
    editorStart: "super+shift+up",
    editorEnd: "super+shift+down",
 };
 export const DEFAULT_BASH_MODE_SETTINGS: BashModeSettings = {
-   toggleShortcut: "ctrl+shift+b",
+   toggleShortcut: "ctrl+b",
    transcriptMaxLines: 2000,
    transcriptMaxBytes: 512 * 1024,
 };
@@ -96,11 +96,6 @@ export const CHAT_JUMP_SHORTCUTS: Array<{
       description: "Jump to next LLM message",
       action: { kind: "message", role: "assistant", direction: "next" },
    },
-   {
-      shortcutKey: "jumpChatBottom",
-      description: "Jump chat to bottom",
-      action: { kind: "bottom" },
-   },
 ];
 export const SHORTCUT_KEYS: PowerlineShortcutKey[] = [
    "stashHistory",
@@ -110,7 +105,6 @@ export const SHORTCUT_KEYS: PowerlineShortcutKey[] = [
    "jumpNextUserMessage",
    "jumpPreviousLlmMessage",
    "jumpNextLlmMessage",
-   "jumpChatBottom",
    "scrollChatUp",
    "scrollChatDown",
    "editorStart",

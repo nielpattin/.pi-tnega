@@ -164,7 +164,7 @@ const gitSegment: StatusLineSegment = {
          }
          if (indicators.length > 0) {
             const indicatorText = indicators.join(" ");
-            if (!content && showBranch === false) {
+            if (!content && !showBranch) {
                // No branch shown, color the git icon with branch color
                content = color(ctx, branchColor, icons.git ? `${icons.git} ` : "") + indicatorText;
             } else {
@@ -363,7 +363,7 @@ const hostnameSegment: StatusLineSegment = {
    id: "hostname",
    render() {
       const icons = getIcons();
-      const name = osHostname().split(".")[0]!;
+      const name = osHostname().split(".")[0];
       return { content: withIcon(icons.host, name), visible: true };
    },
 };
@@ -497,9 +497,13 @@ function renderCustomSegment(id: `custom:${string}`, ctx: SegmentContext): Rende
    return { content, visible: true };
 }
 
+function isCustomSegmentId(id: string): id is `custom:${string}` {
+   return id.startsWith("custom:");
+}
+
 export function renderSegment(id: StatusLineSegmentId, ctx: SegmentContext): RenderedSegment {
-   if (id.startsWith("custom:")) {
-      return renderCustomSegment(id as `custom:${string}`, ctx);
+   if (isCustomSegmentId(id)) {
+      return renderCustomSegment(id, ctx);
    }
 
    const segment = (SEGMENTS as Record<string, StatusLineSegment | undefined>)[id];

@@ -84,71 +84,71 @@ const DEFAULT_KEYBOARD_SCROLL_SHORTCUTS: KeyboardScrollShortcuts = {
 };
 
 export function beginSynchronizedOutput(): string {
-   return "\x1b[?2026h";
+   return "\u001b[?2026h";
 }
 
 export function endSynchronizedOutput(): string {
-   return "\x1b[?2026l";
+   return "\u001b[?2026l";
 }
 
 export function setScrollRegion(top: number, bottom: number): string {
-   return `\x1b[${top};${bottom}r`;
+   return `\u001b[${top};${bottom}r`;
 }
 
 export function resetScrollRegion(): string {
-   return "\x1b[r";
+   return "\u001b[r";
 }
 
 export function moveCursor(row: number, col: number): string {
-   return `\x1b[${row};${col}H`;
+   return `\u001b[${row};${col}H`;
 }
 
 function clearLine(): string {
-   return "\x1b[2K";
+   return "\u001b[2K";
 }
 
 function hideCursor(): string {
-   return "\x1b[?25l";
+   return "\u001b[?25l";
 }
 
 function showCursor(): string {
-   return "\x1b[?25h";
+   return "\u001b[?25h";
 }
 
 function enterAlternateScreen(): string {
-   return "\x1b[?1049h";
+   return "\u001b[?1049h";
 }
 
 function exitAlternateScreen(): string {
-   return "\x1b[?1049l";
+   return "\u001b[?1049l";
 }
 
 function enableAlternateScrollMode(): string {
-   return "\x1b[?1007h";
+   return "\u001b[?1007h";
 }
 
 function disableAlternateScrollMode(): string {
-   return "\x1b[?1007l";
+   return "\u001b[?1007l";
 }
 
 function enableMouseReporting(): string {
-   return "\x1b[?1002h\x1b[?1006h";
+   return "\u001b[?1002h\u001b[?1006h";
 }
 
 function disableMouseReporting(): string {
-   return "\x1b[?1006l\x1b[?1002l\x1b[?1000l";
+   return "\u001b[?1006l\u001b[?1002l\u001b[?1000l";
 }
 
 function enableExtendedKeyboardMode(mode: ExtendedKeyboardMode): string {
-   return mode === "kitty" ? "\x1b[>7u" : "\x1b[>4;2m";
+   return mode === "kitty" ? "\u001b[>7u" : "\u001b[>4;2m";
 }
 
 function disableExtendedKeyboardMode(mode: ExtendedKeyboardMode): string {
-   return mode === "kitty" ? "\x1b[<u" : "\x1b[>4;0m";
+   return mode === "kitty" ? "\u001b[<u" : "\u001b[>4;0m";
 }
 
 function resetExtendedKeyboardModes(): string {
-   return "\x1b[<999u\x1b[>4;0m";
+   return "\u001b[<999u\u001b[>4;0m";
 }
 
 export function emergencyTerminalModeReset(): string {
@@ -173,32 +173,34 @@ function parseKeyboardScrollDelta(
       matchesConfiguredShortcut(data, shortcuts.up) ||
       matchesKey(data, "pageUp") ||
       matchesKey(data, "ctrl+shift+up") ||
-      /^\x1b\[(?:5;9(?::[12])?~|1;6(?::[12])?A|57421;9(?::[12])?u|57419;6(?::[12])?u)$/.test(data)
+      /^\u001b\[(?:5;9(?::[12])?~|1;6(?::[12])?A|57421;9(?::[12])?u|57419;6(?::[12])?u)$/.test(data)
    )
       return 10;
    if (
       matchesConfiguredShortcut(data, shortcuts.down) ||
       matchesKey(data, "pageDown") ||
       matchesKey(data, "ctrl+shift+down") ||
-      /^\x1b\[(?:6;9(?::[12])?~|1;6(?::[12])?B|57422;9(?::[12])?u|57420;6(?::[12])?u)$/.test(data)
+      /^\u001b\[(?:6;9(?::[12])?~|1;6(?::[12])?B|57422;9(?::[12])?u|57420;6(?::[12])?u)$/.test(data)
    )
       return -10;
    return 0;
 }
 
 function parseSgrMousePackets(data: string): SgrMousePacket[] | null {
-   const pattern = /\x1b\[<(\d+);(\d+);(\d+)([Mm])/g;
+   const pattern = /\u001b\[<(\d+);(\d+);(\d+)([Mm])/g;
    const packets: SgrMousePacket[] = [];
    let offset = 0;
 
    for (const match of data.matchAll(pattern)) {
       if (match.index !== offset) return null;
       offset = match.index + match[0].length;
+      const finalChar = match[4];
+      if (finalChar !== "M" && finalChar !== "m") continue;
       packets.push({
          code: Number(match[1]),
          col: Number(match[2]),
          row: Number(match[3]),
-         final: match[4] as "M" | "m",
+         final: finalChar,
       });
    }
 
@@ -234,11 +236,11 @@ function isMouseRelease(packet: SgrMousePacket): boolean {
 }
 
 function stripOscSequences(line: string): string {
-   return line.replace(/\x1b\][^\x07]*(?:\x07|\x1b\\)/g, "");
+   return line.replace(/\u001b\][^\u0007]*(?:\u0007|\u001b\\)/g, "");
 }
 
 function stripAnsi(line: string): string {
-   return stripOscSequences(line).replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, "");
+   return stripOscSequences(line).replace(/\u001b\[[0-9;?]*[ -/]*[@-~]/g, "");
 }
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
@@ -302,7 +304,8 @@ export function buildFixedClusterPaint(
    if (cluster.lines.length === 0) return "";
 
    const totalLines = cluster.lines.length;
-   const transcriptCount = cluster.transcriptRowCount;
+   const transcriptCount = cluster.transcriptRowCount ?? 0;
+   const transcriptStartRow = cluster.transcriptStartRow ?? -1;
    const nonTranscriptCount = totalLines - transcriptCount;
 
    // Non-transcript portion sticks to the bottom of the terminal.
@@ -313,7 +316,7 @@ export function buildFixedClusterPaint(
    // When bash mode is active, clear and fill the entire chat area.
    // Transcript is painted bottom-up: newest line at the bottom (just above
    // editor), older lines above, blank space at the top if needed.
-   if (transcriptCount > 0 || cluster.transcriptStartRow >= 0) {
+   if (transcriptCount > 0 || transcriptStartRow >= 0) {
       const overlayEndRow = bottomStartRow - 1;
       for (let row = 1; row <= overlayEndRow; row++) {
          buffer += moveCursor(row, 1);
@@ -321,15 +324,15 @@ export function buildFixedClusterPaint(
          const rowsFromBottom = overlayEndRow - row;
          if (rowsFromBottom < transcriptCount) {
             const lineIdx = transcriptCount - 1 - rowsFromBottom;
-            buffer += sanitizeLine(cluster.lines[cluster.transcriptStartRow + lineIdx] ?? "", width);
+            buffer += sanitizeLine(cluster.lines[transcriptStartRow + lineIdx] ?? "", width);
          }
       }
    }
 
    // Paint non-transcript portion at the bottom.
    for (let i = 0; i < totalLines; i++) {
-      if (i >= cluster.transcriptStartRow && i < cluster.transcriptStartRow + transcriptCount) continue;
-      const paintedRow = i < cluster.transcriptStartRow ? i : i - transcriptCount;
+      if (i >= transcriptStartRow && i < transcriptStartRow + transcriptCount) continue;
+      const paintedRow = i < transcriptStartRow ? i : i - transcriptCount;
       buffer += moveCursor(bottomStartRow + paintedRow, 1);
       buffer += clearLine();
       buffer += sanitizeLine(cluster.lines[i] ?? "", width);
@@ -337,7 +340,7 @@ export function buildFixedClusterPaint(
 
    if (cluster.cursor && showHardwareCursor) {
       const cursorRow = cluster.cursor.row;
-      const tStart = cluster.transcriptStartRow;
+      const tStart = transcriptStartRow;
       const tEnd = tStart + transcriptCount;
       if (cursorRow >= tStart && cursorRow < tEnd) {
          buffer += moveCursor(1 + cursorRow - tStart, Math.max(1, cluster.cursor.col + 1));
@@ -463,7 +466,7 @@ export class TerminalSplitCompositor {
          };
       }
       if (typeof this.tui.compositeLineAt === "function") {
-         this.originalCompositeLineAt = this.tui.compositeLineAt.bind(this.tui) as CompositeLineAt;
+         this.originalCompositeLineAt = this.tui.compositeLineAt.bind(this.tui) as unknown as CompositeLineAt;
          this.tui.compositeLineAt = (
             baseLine: string,
             overlayLine: string,
@@ -549,7 +552,7 @@ export class TerminalSplitCompositor {
       if (cluster.lines.length === 0) return;
 
       const prevScrollableRows = Math.max(1, rawRows - prevClusterLineCount + prevTranscriptRowCount);
-      const newScrollableRows = Math.max(1, rawRows - cluster.lines.length + cluster.transcriptRowCount);
+      const newScrollableRows = Math.max(1, rawRows - cluster.lines.length + (cluster.transcriptRowCount ?? 0));
 
       let buffer = beginSynchronizedOutput();
 
@@ -622,7 +625,7 @@ export class TerminalSplitCompositor {
       const rawRows = this.getRawRows();
       const width = Math.max(1, this.terminal.columns || 80);
       const cluster = this.getCluster(width, rawRows);
-      return Math.max(1, rawRows - cluster.lines.length + cluster.transcriptRowCount);
+      return Math.max(1, rawRows - cluster.lines.length + (cluster.transcriptRowCount ?? 0));
    }
 
    private renderScrollableRoot(width: number): string[] {
@@ -639,7 +642,7 @@ export class TerminalSplitCompositor {
          const rawRows = this.getRawRows();
          const renderWidth = Math.max(1, width);
          const cluster = this.getCluster(renderWidth, rawRows);
-         const scrollableRows = Math.max(1, rawRows - cluster.lines.length + cluster.transcriptRowCount);
+         const scrollableRows = Math.max(1, rawRows - cluster.lines.length + (cluster.transcriptRowCount ?? 0));
          const lines = this.originalRender(renderWidth);
          this.rootLines = lines;
          if (this.scrollOffset > 0 && this.lastRootLineCount > 0 && lines.length > this.lastRootLineCount) {
@@ -890,7 +893,7 @@ export class TerminalSplitCompositor {
       const before = sliceColumns(plain, 0, startCol);
       const selected = sliceColumns(plain, startCol, endCol);
       const after = sliceColumns(plain, endCol, Number.POSITIVE_INFINITY);
-      return `${before}\x1b[7m${selected}\x1b[27m${after}`;
+      return `${before}\u001b[7m${selected}\u001b[27m${after}`;
    }
 
    private selectionLineWidth(area: SelectionArea, lineIndex: number): number {

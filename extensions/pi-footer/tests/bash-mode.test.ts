@@ -63,7 +63,7 @@ function ensureEditorModuleLinks(): { cleanup: () => void } {
    };
 }
 
-test("project history is stored newest-first and global zsh history parses histfile format", () => {
+await test("project history is stored newest-first and global zsh history parses histfile format", () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-history-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -78,13 +78,13 @@ test("project history is stored newest-first and global zsh history parses histf
    assert.deepEqual(global, ["plain-command", "git pull", "git fetch"]);
 });
 
-test("matchHistoryEntries returns newest entries when the prefix is empty", () => {
+await test("matchHistoryEntries returns newest entries when the prefix is empty", () => {
    const matches = matchHistoryEntries(["git stash", "git status", "git stash", "git fetch"], "", 10);
 
    assert.deepEqual(matches, ["git stash", "git status", "git fetch"]);
 });
 
-test("theme.json can override icons without touching colors", () => {
+await test("theme.json can override icons without touching colors", () => {
    const themePath = join(process.cwd(), "theme.json");
    const originalTheme = existsSync(themePath) ? readFileSync(themePath, "utf8") : null;
    const originalNerdFonts = process.env.POWERLINE_NERD_FONTS;
@@ -112,7 +112,7 @@ test("theme.json can override icons without touching colors", () => {
    }
 });
 
-test("one-off bash command context strips ! and !! prefixes", () => {
+await test("one-off bash command context strips ! and !! prefixes", () => {
    assert.deepEqual(getOneOffBashCommandContext("!git status"), {
       prefix: "!",
       command: "git status",
@@ -129,7 +129,7 @@ test("one-off bash command context strips ! and !! prefixes", () => {
    assert.equal(getOneOffBashCommandContext("git status"), null);
 });
 
-test("transcript store truncates oldest commands at command boundaries", () => {
+await test("transcript store truncates oldest commands at command boundaries", () => {
    const store = new BashTranscriptStore({ transcriptMaxLines: 3, transcriptMaxBytes: 1024 });
    store.startCommand("a", "echo one", "/tmp");
    store.appendOutput("a", "line-1\nline-2");
@@ -145,7 +145,7 @@ test("transcript store truncates oldest commands at command boundaries", () => {
    assert.equal(snapshot.truncatedCommands, 1);
 });
 
-test("transcript store keeps the active command even when it alone exceeds limits", () => {
+await test("transcript store keeps the active command even when it alone exceeds limits", () => {
    const store = new BashTranscriptStore({ transcriptMaxLines: 3, transcriptMaxBytes: 1024 });
    store.startCommand("a", "echo big", "/tmp");
    store.appendOutput("a", "1\n2\n3\n4");
@@ -156,7 +156,7 @@ test("transcript store keeps the active command even when it alone exceeds limit
    assert.deepEqual(snapshot.commands[0]?.output, ["1", "2", "3", "4"]);
 });
 
-test("ghost suggestion prefers project history over global history", async () => {
+await test("ghost suggestion prefers project history over global history", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-ghost-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -171,7 +171,7 @@ test("ghost suggestion prefers project history over global history", async () =>
    assert.equal(suggestion?.source, "project-history");
 });
 
-test("ghost suggestion shows newest project history on an empty prompt", async () => {
+await test("ghost suggestion shows newest project history on an empty prompt", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-empty-project-ghost-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -186,7 +186,7 @@ test("ghost suggestion shows newest project history on an empty prompt", async (
    assert.equal(suggestion?.source, "project-history");
 });
 
-test("ghost suggestion stays empty on an empty prompt when only global history exists", async () => {
+await test("ghost suggestion stays empty on an empty prompt when only global history exists", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-empty-global-ghost-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -198,7 +198,7 @@ test("ghost suggestion stays empty on an empty prompt when only global history e
    assert.equal(suggestion, null);
 });
 
-test("ghost suggestion stays empty when the prompt is empty and no history exists", async () => {
+await test("ghost suggestion stays empty when the prompt is empty and no history exists", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-empty-no-history-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -210,7 +210,7 @@ test("ghost suggestion stays empty when the prompt is empty and no history exist
    assert.equal(suggestion, null);
 });
 
-test("ghost suggestion can extend the current token from deterministic path completions", async () => {
+await test("ghost suggestion can extend the current token from deterministic path completions", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-inline-ghost-"));
    mkdirSync(join(cwd, "dev"), { recursive: true });
    mkdirSync(join(cwd, "My Folder"), { recursive: true });
@@ -225,7 +225,7 @@ test("ghost suggestion can extend the current token from deterministic path comp
    assert.equal(escapedSuggestion?.source, "path");
 });
 
-test("ghost suggestion does not invoke shell-native completion hooks", async () => {
+await test("ghost suggestion does not invoke shell-native completion hooks", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-no-native-ghost-"));
    mkdirSync(join(cwd, "dev"), { recursive: true });
 
@@ -240,7 +240,7 @@ test("ghost suggestion does not invoke shell-native completion hooks", async () 
    assert.equal(suggestion?.source, "path");
 });
 
-test("command-position ghost prefers the newest successful project-history command", async () => {
+await test("command-position ghost prefers the newest successful project-history command", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-command-project-history-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -254,7 +254,7 @@ test("command-position ghost prefers the newest successful project-history comma
    assert.equal(suggestion?.source, "project-history");
 });
 
-test("command-position ghost uses guarded global git history when project history is absent", async () => {
+await test("command-position ghost uses guarded global git history when project history is absent", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-command-global-history-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -270,7 +270,7 @@ test("command-position ghost uses guarded global git history when project histor
    assert.equal(guardedSuggestion?.source, "global-history");
 });
 
-test("command-position ghost falls back to git status when git is likely but history is absent", async () => {
+await test("command-position ghost falls back to git status when git is likely but history is absent", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-command-git-default-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -283,7 +283,7 @@ test("command-position ghost falls back to git status when git is likely but his
    assert.equal(suggestion?.source, "git");
 });
 
-test("command-position ghost falls back to cd dot-dot for the cd stem", async () => {
+await test("command-position ghost falls back to cd dot-dot for the cd stem", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-command-cd-default-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -296,7 +296,7 @@ test("command-position ghost falls back to cd dot-dot for the cd stem", async ()
    assert.equal(suggestion?.source, "path");
 });
 
-test("command-position ghost stays empty when there is no supported history-backed stem", async () => {
+await test("command-position ghost stays empty when there is no supported history-backed stem", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-command-empty-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -308,7 +308,7 @@ test("command-position ghost stays empty when there is no supported history-back
    assert.equal(suggestion, null);
 });
 
-test("ghost suggestion ignores invalid raw global history and keeps a deterministic git candidate", async () => {
+await test("ghost suggestion ignores invalid raw global history and keeps a deterministic git candidate", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-global-history-ghost-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -321,7 +321,7 @@ test("ghost suggestion ignores invalid raw global history and keeps a determinis
    assert.equal(suggestion?.source, "git");
 });
 
-test("global history boosts already-valid deterministic git candidates", async () => {
+await test("global history boosts already-valid deterministic git candidates", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-global-history-tiebreak-ghost-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -334,7 +334,7 @@ test("global history boosts already-valid deterministic git candidates", async (
    assert.equal(suggestion?.source, "git");
 });
 
-test("deterministic path completion keeps directory suffixes for escaped paths", async () => {
+await test("deterministic path completion keeps directory suffixes for escaped paths", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-path-escaped-"));
    const histfile = join(cwd, ".zsh_history");
    process.env.HISTFILE = histfile;
@@ -348,7 +348,7 @@ test("deterministic path completion keeps directory suffixes for escaped paths",
    assert.equal(suggestion?.source, "path");
 });
 
-test("deterministic path completion handles bash argument position", async () => {
+await test("deterministic path completion handles bash argument position", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-bash-path-"));
    mkdirSync(join(cwd, "devdir"), { recursive: true });
 
@@ -359,7 +359,7 @@ test("deterministic path completion handles bash argument position", async () =>
    assert.equal(suggestion?.source, "path");
 });
 
-test("managed shell session preserves cwd changes across commands", async () => {
+await test("managed shell session preserves cwd changes across commands", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-shell-"));
    const childDir = join(cwd, "child");
    mkdirSync(childDir, { recursive: true });
@@ -397,7 +397,7 @@ test("managed shell session preserves cwd changes across commands", async () => 
    }
 });
 
-test("managed shell session recovers cleanly after interrupt", async () => {
+await test("managed shell session recovers cleanly after interrupt", async () => {
    const cwd = mkdtempSync(join(tmpdir(), "powerline-shell-interrupt-"));
    const store = new BashTranscriptStore({ transcriptMaxLines: 100, transcriptMaxBytes: 64 * 1024 });
    const session = new ManagedShellSession(
@@ -439,7 +439,7 @@ test("managed shell session recovers cleanly after interrupt", async () => {
    }
 });
 
-test("bash editor Tab accepts the current ghost suggestion without opening autocomplete", async () => {
+await test("bash editor Tab accepts the current ghost suggestion without opening autocomplete", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -478,18 +478,19 @@ test("bash editor Tab accepts the current ghost suggestion without opening autoc
    }
 });
 
-test("bash editor does not submit pasted multiline input while bracketed paste is active", async () => {
+await test("bash editor does not submit pasted multiline input while bracketed paste is active", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
       const { BashModeEditor } = await import("../bash-mode/editor.ts");
       const { CustomEditor } =
-         await import("/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js");
+         await import("../../../node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js");
 
       let delegated = 0;
       let submitted = 0;
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       const superHandleInput = CustomEditor.prototype.handleInput;
-      CustomEditor.prototype.handleInput = function handleInput() {
+      CustomEditor.prototype.handleInput = function handleInput(this: void) {
          delegated += 1;
       };
 
@@ -530,18 +531,19 @@ test("bash editor does not submit pasted multiline input while bracketed paste i
    }
 });
 
-test("bash editor refreshes shell ghost state after a bracketed paste completes", async () => {
+await test("bash editor refreshes shell ghost state after a bracketed paste completes", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
       const { BashModeEditor } = await import("../bash-mode/editor.ts");
       const { CustomEditor } =
-         await import("/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js");
+         await import("../../../node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js");
 
       let delegated = 0;
       let scheduled = 0;
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       const superHandleInput = CustomEditor.prototype.handleInput;
-      CustomEditor.prototype.handleInput = function handleInput() {
+      CustomEditor.prototype.handleInput = function handleInput(this: Record<string, unknown>) {
          delegated += 1;
          Reflect.set(this, "isInPaste", false);
       };
@@ -593,32 +595,22 @@ test("bash editor refreshes shell ghost state after a bracketed paste completes"
    }
 });
 
-test("one-off bash autocomplete provider stays inactive even inside bang commands", async () => {
+await test("one-off bash autocomplete provider stays inactive even inside bang commands", async () => {
    const provider = new OneOffBashAutocompleteProvider();
-   const suggestions = await provider.getSuggestions(["!!gi"], 0, 4, {
-      signal: new AbortController().signal,
-   });
+   const suggestions = await provider.getSuggestions();
 
    assert.equal(suggestions, null);
 });
 
-test("bash autocomplete providers return null synchronously in shell contexts", () => {
-   const signal = new AbortController().signal;
-
-   const bashSuggestions = new BashAutocompleteProvider().getSuggestions(["git st"], 0, 6, {
-      signal,
-   });
-   const oneOffSuggestions = new OneOffBashAutocompleteProvider().getSuggestions(["!git st"], 0, 7, {
-      signal,
-   });
+await test("bash autocomplete providers return null when queried directly", async () => {
+   const bashSuggestions = await new BashAutocompleteProvider().getSuggestions();
+   const oneOffSuggestions = await new OneOffBashAutocompleteProvider().getSuggestions();
 
    assert.equal(bashSuggestions, null);
    assert.equal(oneOffSuggestions, null);
-   assert.equal(bashSuggestions instanceof Promise, false);
-   assert.equal(oneOffSuggestions instanceof Promise, false);
 });
 
-test("mode-aware autocomplete provider preserves synchronous default results", () => {
+await test("mode-aware autocomplete provider preserves synchronous default results", async () => {
    const signal = new AbortController().signal;
    const syncResult = {
       items: [{ value: "status", label: "status" }],
@@ -626,7 +618,7 @@ test("mode-aware autocomplete provider preserves synchronous default results", (
    };
    const provider = new ModeAwareAutocompleteProvider(
       {
-         getSuggestions() {
+         async getSuggestions(..._args: any[]) {
             return syncResult;
          },
          applyCompletion(lines: string[], cursorLine: number, cursorCol: number) {
@@ -638,20 +630,19 @@ test("mode-aware autocomplete provider preserves synchronous default results", (
       () => false,
    );
 
-   const suggestions = provider.getSuggestions(["st"], 0, 2, { signal });
+   const suggestions = await provider.getSuggestions(["st"], 0, 2, { signal });
 
    assert.equal(suggestions, syncResult);
-   assert.equal(suggestions instanceof Promise, false);
 });
 
-test("one-off bash autocomplete provider stays inactive before the bang command starts", async () => {
+await test("one-off bash autocomplete provider stays inactive before the bang command starts", async () => {
    const provider = new OneOffBashAutocompleteProvider();
 
    assert.equal(provider.shouldTriggerFileCompletion(["!git status"], 0, 0), false);
-   assert.equal(await provider.getSuggestions(["!git status"], 0, 0, { signal: new AbortController().signal }), null);
+   assert.equal(await provider.getSuggestions(), null);
 });
 
-test("bash editor refreshGhostSuggestion reuses the ghost scheduling path", async () => {
+await test("bash editor refreshGhostSuggestion reuses the ghost scheduling path", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -670,7 +661,7 @@ test("bash editor refreshGhostSuggestion reuses the ghost scheduling path", asyn
    }
 });
 
-test("bash editor dismiss clears autocomplete when mode turns off", async () => {
+await test("bash editor dismiss clears autocomplete when mode turns off", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -683,7 +674,7 @@ test("bash editor dismiss clears autocomplete when mode turns off", async () => 
             aborted = true;
          },
       };
-      const fakeEditor = {
+      const fakeEditor: any = {
          historyIndex: 7,
          shellHistoryIndex: 2,
          shellHistoryItems: ["git status"],
@@ -717,12 +708,12 @@ test("bash editor dismiss clears autocomplete when mode turns off", async () => 
    }
 });
 
-test("bash editor shell history state does not clobber the base prompt history index", async () => {
+await test("bash editor shell history state does not clobber the base prompt history index", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
       const { BashModeEditor } = await import("../bash-mode/editor.ts");
-      const fakeEditor = {
+      const fakeEditor: any = {
          historyIndex: 5,
          shellHistoryIndex: -1,
          shellHistoryItems: [],
@@ -750,7 +741,7 @@ test("bash editor shell history state does not clobber the base prompt history i
    }
 });
 
-test("bash editor escape exits bash mode", async () => {
+await test("bash editor escape exits bash mode", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -786,7 +777,7 @@ test("bash editor escape exits bash mode", async () => {
    }
 });
 
-test("bash editor right arrow accepts an empty-prompt ghost suggestion without submitting", async () => {
+await test("bash editor right arrow accepts an empty-prompt ghost suggestion without submitting", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -829,7 +820,7 @@ test("bash editor right arrow accepts an empty-prompt ghost suggestion without s
    }
 });
 
-test("bash editor right arrow accepts ghost text for one-off bang commands", async () => {
+await test("bash editor right arrow accepts ghost text for one-off bang commands", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -866,15 +857,14 @@ test("bash editor right arrow accepts ghost text for one-off bang commands", asy
    }
 });
 
-test("bash editor runs copied Pi app action handlers for alt-enter", async () => {
+await test("bash editor runs copied Pi app action handlers for alt-enter", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
       const { BashModeEditor } = await import("../bash-mode/editor.ts");
       const { KeybindingsManager } =
-         await import("/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js");
-      const { setKittyProtocolActive } =
-         await import("/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-tui/dist/keys.js");
+         await import("../../../node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js");
+      const { setKittyProtocolActive } = await import("../../../node_modules/@earendil-works/pi-tui/dist/keys.js");
       const keybindings = KeybindingsManager.create();
       const editor = new BashModeEditor({ requestRender() {}, terminal: { columns: 80, rows: 24 } }, {}, keybindings, {
          keybindings,
@@ -909,13 +899,13 @@ test("bash editor runs copied Pi app action handlers for alt-enter", async () =>
    }
 });
 
-test("bash editor command arrows jump to editor boundaries", async () => {
+await test("bash editor command arrows jump to editor boundaries", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
       const { BashModeEditor } = await import("../bash-mode/editor.ts");
       const { KeybindingsManager } =
-         await import("/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js");
+         await import("../../../node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js");
       const keybindings = KeybindingsManager.create();
       let renderRequests = 0;
       const editor = new BashModeEditor(
@@ -1024,7 +1014,7 @@ test("bash editor command arrows jump to editor boundaries", async () => {
    }
 });
 
-test("bash editor enter does not accept ghost text while a shell command is running", async () => {
+await test("bash editor enter does not accept ghost text while a shell command is running", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -1072,7 +1062,7 @@ test("bash editor enter does not accept ghost text while a shell command is runn
    }
 });
 
-test("bash editor enter submits the typed command without accepting ghost text", async () => {
+await test("bash editor enter submits the typed command without accepting ghost text", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -1119,17 +1109,18 @@ test("bash editor enter submits the typed command without accepting ghost text",
    }
 });
 
-test("one-off bang submit does not accept ghost text before submitting", async () => {
+await test("one-off bang submit does not accept ghost text before submitting", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
       const { BashModeEditor } = await import("../bash-mode/editor.ts");
       const { CustomEditor } =
-         await import("/opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js");
+         await import("../../../node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js");
 
       let delegated = 0;
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       const superHandleInput = CustomEditor.prototype.handleInput;
-      CustomEditor.prototype.handleInput = function handleInput() {
+      CustomEditor.prototype.handleInput = function handleInput(this: void) {
          delegated += 1;
       };
 
@@ -1170,7 +1161,7 @@ test("one-off bang submit does not accept ghost text before submitting", async (
    }
 });
 
-test("bash editor does not accept a hidden ghost suggestion when the cursor is not at the end", async () => {
+await test("bash editor does not accept a hidden ghost suggestion when the cursor is not at the end", async () => {
    const links = ensureEditorModuleLinks();
 
    try {
@@ -1195,7 +1186,7 @@ test("bash editor does not accept a hidden ghost suggestion when the cursor is n
    }
 });
 
-test("bash editor submit clears the prompt and refreshes the empty ghost suggestion", async () => {
+await test("bash editor submit clears the prompt and refreshes the empty ghost suggestion", async () => {
    const links = ensureEditorModuleLinks();
 
    try {

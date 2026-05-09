@@ -85,8 +85,11 @@ export class BashModeEditor extends CustomEditor {
       this.shellHistoryDraft = "";
       this.clearGhostSuggestion();
 
-      if ("cancelAutocomplete" in this && typeof (this as any).cancelAutocomplete === "function") {
-         (this as any).cancelAutocomplete();
+      if (Reflect.has(this, "cancelAutocomplete")) {
+         const cancel = Reflect.get(this, "cancelAutocomplete");
+         if (typeof cancel === "function") {
+            cancel.call(this);
+         }
       }
       this.tui.requestRender();
    }

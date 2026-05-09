@@ -26,7 +26,9 @@ function normalizeCustomItemPosition(value: unknown): CustomItemPosition {
 function normalizeCustomColor(value: unknown): ColorValue | undefined {
    if (typeof value !== "string") return undefined;
    const normalized = value.trim();
-   return normalized ? (normalized as ColorValue) : undefined;
+   if (!normalized) return undefined;
+   if (normalized.startsWith("#")) return normalized as `#${string}`;
+   return normalized as ColorValue;
 }
 
 function normalizeCustomPrefix(value: unknown): string | undefined {
@@ -155,7 +157,7 @@ export function normalizeExtensionStatusValue(value: string): string | null {
       return null;
    }
 
-   const stripped = value.replace(/(\x1b\[[0-9;]*m|\s|·|[|])+$/, "");
+   const stripped = value.replace(/(\u001b\[[0-9;]*m|\s|·|[|])+$/, "");
    return visibleWidth(stripped) > 0 ? stripped : null;
 }
 

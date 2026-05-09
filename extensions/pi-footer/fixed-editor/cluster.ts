@@ -1,6 +1,6 @@
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
-export const CURSOR_MARKER = "\x1b_pi:c\x07";
+export const CURSOR_MARKER = "\u001b_pi:c\u0007";
 
 export interface FixedEditorClusterInput {
    width: number;
@@ -24,9 +24,9 @@ export interface FixedEditorClusterRender {
    lines: string[];
    cursor: FixedEditorCursor | null;
    /** Row index (0-based, relative to cluster top) where transcript begins. -1 if no transcript. */
-   transcriptStartRow: number;
+   transcriptStartRow?: number;
    /** Number of rows the transcript occupies. 0 if no transcript. */
-   transcriptRowCount: number;
+   transcriptRowCount?: number;
 }
 
 function normalizeLines(lines: string[] | undefined, width: number): string[] {
@@ -54,7 +54,7 @@ function capEditorLines(lines: string[], count: number): string[] {
 
    const selectedRow = lines.findIndex((line) =>
       line
-         .replace(/\x1b\[[0-9;]*m/g, "")
+         .replace(/\u001b\[[0-9;]*m/g, "")
          .trimStart()
          .startsWith("→ "),
    );

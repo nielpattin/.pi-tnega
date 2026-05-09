@@ -10,7 +10,7 @@ import {
    normalizeCompactExtensionStatus,
 } from "../powerline-config.ts";
 
-test("parsePowerlineConfig supports object config with custom items", () => {
+await test("parsePowerlineConfig supports object config with custom items", () => {
    const config = parsePowerlineConfig({
       customItems: [
          { id: "ci", statusKey: "ci-status", position: "right", prefix: "CI" },
@@ -27,19 +27,19 @@ test("parsePowerlineConfig supports object config with custom items", () => {
    assert.equal(config.fixedEditor, true);
 });
 
-test("parsePowerlineConfig supports disabling mouse scroll", () => {
+await test("parsePowerlineConfig supports disabling mouse scroll", () => {
    const config = parsePowerlineConfig({ mouseScroll: false });
 
    assert.equal(config.mouseScroll, false);
 });
 
-test("parsePowerlineConfig supports disabling fixed editor", () => {
+await test("parsePowerlineConfig supports disabling fixed editor", () => {
    const config = parsePowerlineConfig({ fixedEditor: false });
 
    assert.equal(config.fixedEditor, false);
 });
 
-test("mergeSegmentsWithCustomItems appends custom segment ids by position", () => {
+await test("mergeSegmentsWithCustomItems appends custom segment ids by position", () => {
    const merged = mergeSegmentsWithCustomItems(
       {
          leftSegments: ["path"],
@@ -77,11 +77,15 @@ test("mergeSegmentsWithCustomItems appends custom segment ids by position", () =
    assert.deepEqual(merged.secondarySegments, ["extension_statuses", "custom:review"]);
 });
 
-test("nextPowerlineSettingWithOptions preserves object settings", () => {
+await test("nextPowerlineSettingWithOptions preserves object settings", () => {
    const updated = nextPowerlineSettingWithOptions(
       { customItems: [{ id: "ci" }], mouseScroll: false },
       { fixedEditor: false },
-   );
+   ) as {
+      fixedEditor: boolean;
+      mouseScroll: boolean;
+      customItems: Array<{ id: string }>;
+   };
    if (typeof updated !== "object" || updated === null || Array.isArray(updated)) {
       assert.fail("expected an object powerline setting");
    }
@@ -91,13 +95,13 @@ test("nextPowerlineSettingWithOptions preserves object settings", () => {
    assert.deepEqual(updated.customItems, [{ id: "ci" }]);
 });
 
-test("nextPowerlineSettingWithOptions converts string settings to object settings", () => {
+await test("nextPowerlineSettingWithOptions converts string settings to object settings", () => {
    assert.deepEqual(nextPowerlineSettingWithOptions("compact", { mouseScroll: true }), {
       mouseScroll: true,
    });
 });
 
-test("collectHiddenExtensionStatusKeys includes default custom status keys", () => {
+await test("collectHiddenExtensionStatusKeys includes default custom status keys", () => {
    const hidden = collectHiddenExtensionStatusKeys([
       {
          id: "ci",
@@ -119,17 +123,17 @@ test("collectHiddenExtensionStatusKeys includes default custom status keys", () 
    assert.equal(hidden.has("review"), false);
 });
 
-test("normalizeCompactExtensionStatus strips baked-in trailing separators", () => {
+await test("normalizeCompactExtensionStatus strips baked-in trailing separators", () => {
    assert.equal(normalizeCompactExtensionStatus("CI ok · "), "CI ok");
    assert.equal(normalizeCompactExtensionStatus("CI ok |   "), "CI ok");
    assert.equal(normalizeCompactExtensionStatus("[notice] queued"), null);
 });
 
-test("normalizeExtensionStatusValue keeps notification-style statuses renderable for custom items", () => {
+await test("normalizeExtensionStatusValue keeps notification-style statuses renderable for custom items", () => {
    assert.equal(normalizeExtensionStatusValue("[review] queued · "), "[review] queued");
 });
 
-test("getNotificationExtensionStatuses skips promoted hidden status keys", () => {
+await test("getNotificationExtensionStatuses skips promoted hidden status keys", () => {
    const statuses = new Map<string, string>([
       ["ci-status", "[ci] queued"],
       ["review", "[review] running"],

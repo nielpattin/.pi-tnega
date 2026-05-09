@@ -377,7 +377,7 @@ export class BashCompletionEngine {
             1,
          );
          if (projectHistory.length > 0) {
-            return { value: `${prefix}${projectHistory[0]!}`, source: "project-history" };
+            return { value: `${prefix}${projectHistory[0]}`, source: "project-history" };
          }
 
          return null;
@@ -392,7 +392,7 @@ export class BashCompletionEngine {
          10,
       );
       if (projectHistory.length > 0) {
-         return { value: projectHistory[0]!, source: "project-history" };
+         return { value: projectHistory[0], source: "project-history" };
       }
 
       if (ctx.tokenIndex === 0) {

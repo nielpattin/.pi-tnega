@@ -18,7 +18,7 @@ export type CommandCodeProviderModelConfig = ProviderModelConfig & {
    output?: OutputModality[];
    capabilities?: CapabilityFlags;
    isFree?: boolean;
-   importOwnership?: "model-discovery" | "manual" | string;
+   importOwnership?: string;
 };
 
 export interface ExtensionConfig {
@@ -312,7 +312,7 @@ function normalizeModel(
       headers: stringRecordOr(rawModel.headers, defaults.headers),
       compat: recordOr(
          rawModel.compat,
-         defaults.compat as Record<string, unknown> | undefined,
+         isRecord(defaults.compat) ? defaults.compat : undefined,
       ) as ProviderModelConfig["compat"],
       isFree: optionalBoolean(rawModel.isFree, defaults.isFree),
       importOwnership: optionalString(rawModel.importOwnership) ?? defaults.importOwnership,

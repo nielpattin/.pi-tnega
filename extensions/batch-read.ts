@@ -33,7 +33,8 @@ export default function batchReadExtension(pi: ExtensionAPI) {
    });
 
    pi.on("tool_call", async (event) => {
-      if (event.toolName !== "read") return;
+      let result: { block: boolean; reason: string } | undefined;
+      if (event.toolName !== "read") return result;
 
       const path = readPath(event.input);
       const ranged = hasReadRange(event.input);
@@ -41,7 +42,7 @@ export default function batchReadExtension(pi: ExtensionAPI) {
       const repeatedChunkRead = !!path && !!previous && (ranged || previous.ranged);
 
       if (forceBatchReadForCurrentPrompt || repeatedChunkRead) {
-         return {
+         result = {
             block: true,
             reason:
                "Use batch_read instead of multiple read calls for chunked or repeated same-file reads. Put the chunks in one batch_read call, for example [{ path, offset: 1, limit: 500 }, { path, offset: 501, limit: 500 }, { path, offset: 1001, limit: 500 }]. A single read is fine when the file fits in one result.",
@@ -54,6 +55,8 @@ export default function batchReadExtension(pi: ExtensionAPI) {
             ranged: (previous?.ranged ?? false) || ranged,
          });
       }
+
+      return result;
    });
 
    pi.registerTool({

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readCoreContextUsage } from "../context-usage.ts";
 
-test("readCoreContextUsage returns Pi context estimates for branch summaries", () => {
+await test("readCoreContextUsage returns Pi context estimates for branch summaries", () => {
    const usage = readCoreContextUsage({
       getContextUsage() {
          return { tokens: 1250, contextWindow: 5000, percent: 25 };
@@ -16,7 +16,7 @@ test("readCoreContextUsage returns Pi context estimates for branch summaries", (
    });
 });
 
-test("readCoreContextUsage computes percent when Pi returns only token totals", () => {
+await test("readCoreContextUsage computes percent when Pi returns only token totals", () => {
    const usage = readCoreContextUsage({
       getContextUsage() {
          return { tokens: 1000, contextWindow: 4000 };
@@ -30,7 +30,7 @@ test("readCoreContextUsage computes percent when Pi returns only token totals", 
    });
 });
 
-test("readCoreContextUsage ignores unknown or unusable estimates", () => {
+await test("readCoreContextUsage ignores unknown or unusable estimates", () => {
    assert.equal(readCoreContextUsage({}), null);
    assert.equal(readCoreContextUsage({ getContextUsage: () => undefined }), null);
    assert.equal(

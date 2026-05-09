@@ -41,11 +41,22 @@ async function collect(stream: AsyncIterable<AssistantMessageEvent>): Promise<As
    return events;
 }
 
-function createTestLogger(): DebugLogger {
-   return { debug() {}, warn() {}, error() {} } as DebugLogger;
+async function readRequestBody(body: RequestInit["body"] | undefined): Promise<string> {
+   if (body === undefined || body === null) return "";
+   if (typeof body === "string") return body;
+   if (body instanceof URLSearchParams) return body.toString();
+   if (body instanceof ArrayBuffer) return new TextDecoder().decode(body);
+   if (ArrayBuffer.isView(body)) return new TextDecoder().decode(body);
+   if (typeof Blob !== "undefined" && body instanceof Blob) return await body.text();
+   if (typeof body === "object") return JSON.stringify(body);
+   return "";
 }
 
-test("rewrites CommandCode-native tool aliases to Pi tool names", async () => {
+function createTestLogger(): DebugLogger {
+   return { debug() {}, warn() {}, error() {} } as unknown as DebugLogger;
+}
+
+await test("rewrites CommandCode-native tool aliases to Pi tool names", async () => {
    const originalFetch = globalThis.fetch;
    globalThis.fetch = async (): Promise<Response> => {
       return new Response(
@@ -80,7 +91,7 @@ test("rewrites CommandCode-native tool aliases to Pi tool names", async () => {
    }
 });
 
-test("rewrites CommandCode glob tool aliases and filePattern grep arguments", async () => {
+await test("rewrites CommandCode glob tool aliases and filePattern grep arguments", async () => {
    const originalFetch = globalThis.fetch;
    globalThis.fetch = async (): Promise<Response> => {
       return new Response(
@@ -115,11 +126,11 @@ test("rewrites CommandCode glob tool aliases and filePattern grep arguments", as
    }
 });
 
-test("sanitizes glob terminology from outbound prompt and tool descriptions", async () => {
+await test("sanitizes glob terminology from outbound prompt and tool descriptions", async () => {
    const originalFetch = globalThis.fetch;
    let outboundBody: unknown;
    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-      outboundBody = JSON.parse(String(init?.body));
+      outboundBody = JSON.parse(await readRequestBody(init?.body));
       return new Response('{"type":"start"}\n{"type":"finish","finishReason":"stop"}\n', {
          status: 200,
          headers: { "content-type": "text/event-stream" },
@@ -159,11 +170,11 @@ test("sanitizes glob terminology from outbound prompt and tool descriptions", as
    }
 });
 
-test("sends native CommandCode stream request with tool schemas and emits text deltas", async () => {
+await test("sends native CommandCode stream request with tool schemas and emits text deltas", async () => {
    const originalFetch = globalThis.fetch;
    let outboundBody: unknown;
    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-      outboundBody = JSON.parse(String(init?.body));
+      outboundBody = JSON.parse(await readRequestBody(init?.body));
       return new Response(
          '{"type":"start"}\n{"type":"start-step","request":{"body":{}}}\n{"type":"text-start","id":"txt-0"}\n{"type":"text-delta","id":"txt-0","text":"Hel"}\n{"type":"text-delta","id":"txt-0","text":"lo"}\n{"type":"text-end","id":"txt-0"}\n{"type":"finish","finishReason":"stop","totalUsage":{"inputTokens":10,"outputTokens":2,"cachedInputTokens":3}}\n',
          { status: 200, headers: { "content-type": "text/event-stream" } },
@@ -223,11 +234,11 @@ test("sends native CommandCode stream request with tool schemas and emits text d
    }
 });
 
-test("sends native CommandCode tools and still parses XML tool calls from fallback JSON", async () => {
+await test("sends native CommandCode tools and still parses XML tool calls from fallback JSON", async () => {
    const originalFetch = globalThis.fetch;
    let outboundBody: unknown;
    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-      outboundBody = JSON.parse(String(init?.body));
+      outboundBody = JSON.parse(await readRequestBody(init?.body));
       return new Response(
          JSON.stringify({
             id: "msg_tool",
@@ -285,7 +296,7 @@ test("sends native CommandCode tools and still parses XML tool calls from fallba
    }
 });
 
-test("parses DeepSeek DSML tool calls emitted as text", async () => {
+await test("parses DeepSeek DSML tool calls emitted as text", async () => {
    const originalFetch = globalThis.fetch;
    globalThis.fetch = async (): Promise<Response> => {
       return new Response(
@@ -327,11 +338,11 @@ test("parses DeepSeek DSML tool calls emitted as text", async () => {
    }
 });
 
-test("serializes Pi tool results into CommandCode native tool-result content blocks", async () => {
+await test("serializes Pi tool results into CommandCode native tool-result content blocks", async () => {
    const originalFetch = globalThis.fetch;
    let outboundBody: unknown;
    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-      outboundBody = JSON.parse(String(init?.body));
+      outboundBody = JSON.parse(await readRequestBody(init?.body));
       return new Response(
          JSON.stringify({
             id: "msg_after_tool",
@@ -404,7 +415,7 @@ test("serializes Pi tool results into CommandCode native tool-result content blo
    }
 });
 
-test("parses native CommandCode reasoning and tool-call content blocks", async () => {
+await test("parses native CommandCode reasoning and tool-call content blocks", async () => {
    const originalFetch = globalThis.fetch;
    globalThis.fetch = async (): Promise<Response> => {
       return new Response(
@@ -447,11 +458,11 @@ test("parses native CommandCode reasoning and tool-call content blocks", async (
    }
 });
 
-test("does not inject fake reasoning instructions but still parses thinking blocks if upstream returns them", async () => {
+await test("does not inject fake reasoning instructions but still parses thinking blocks if upstream returns them", async () => {
    const originalFetch = globalThis.fetch;
    let outboundBody: unknown;
    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-      outboundBody = JSON.parse(String(init?.body));
+      outboundBody = JSON.parse(await readRequestBody(init?.body));
       return new Response(
          JSON.stringify({
             id: "msg_thinking",

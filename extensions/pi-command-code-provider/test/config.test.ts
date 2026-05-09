@@ -10,7 +10,7 @@ function tempExtensionRoot(): string {
    return mkdtempSync(join(tmpdir(), "pi-command-code-provider-"));
 }
 
-test("loads reasoning metadata and model option fields from config.json", () => {
+await test("loads reasoning metadata and model option fields from config.json", () => {
    const root = tempExtensionRoot();
    writeFileSync(
       join(root, "config.json"),
@@ -41,7 +41,7 @@ test("loads reasoning metadata and model option fields from config.json", () => 
       }),
    );
 
-   const model = loadConfig(root).config.models[0] as Record<string, unknown>;
+   const model = loadConfig(root).config.models[0];
 
    assert.equal(model.api, COMMAND_CODE_API);
    assert.equal(model.reasoning, true);
@@ -55,13 +55,13 @@ test("loads reasoning metadata and model option fields from config.json", () => 
    assert.deepEqual(model.compat, { supportsDeveloperRole: false });
 });
 
-test("defaults CommandCode request timeout to five minutes", () => {
+await test("defaults CommandCode request timeout to five minutes", () => {
    const { config } = loadConfig(tempExtensionRoot());
 
    assert.equal(config.requestTimeoutMs, 300000);
 });
 
-test("uses models.dev limits for bundled model context and output ceilings", () => {
+await test("uses models.dev limits for bundled model context and output ceilings", () => {
    const { config } = loadConfig(tempExtensionRoot());
    const byId = new Map(config.models.map((model) => [model.id, model]));
 
@@ -81,7 +81,7 @@ test("uses models.dev limits for bundled model context and output ceilings", () 
    assert.equal(byId.get("zai-org/GLM-5")?.maxTokens, 131072);
 });
 
-test("uses model-specific thinking level maps without disabling reasoning-capable CommandCode models", () => {
+await test("uses model-specific thinking level maps without disabling reasoning-capable CommandCode models", () => {
    const { config } = loadConfig(tempExtensionRoot());
    const byId = new Map(config.models.map((model) => [model.id, model]));
 
@@ -138,7 +138,7 @@ test("uses model-specific thinking level maps without disabling reasoning-capabl
    });
 });
 
-test("uses CommandCode pricing docs for bundled model costs", () => {
+await test("uses CommandCode pricing docs for bundled model costs", () => {
    const { config } = loadConfig(tempExtensionRoot());
    const byId = new Map(config.models.map((model) => [model.id, model]));
 
@@ -154,7 +154,7 @@ test("uses CommandCode pricing docs for bundled model costs", () => {
    assert.deepEqual(byId.get("gpt-5.3-codex")?.cost, { input: 2, output: 8, cacheRead: 0.5, cacheWrite: 0 });
 });
 
-test("can source command-code model metadata from an agent models.json provider entry", () => {
+await test("can source command-code model metadata from an agent models.json provider entry", () => {
    const root = tempExtensionRoot();
    const modelsJsonPath = join(root, "models.json");
    writeFileSync(

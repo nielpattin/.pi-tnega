@@ -19,6 +19,10 @@ function createSegmentContext(thinkingLevel: string, colors: ColorScheme): Segme
       usageStats: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0 },
       contextPercent: 0,
       contextWindow: 0,
+      contextUsed: 0,
+      availableProviderCount: 0,
+      skillsActive: 0,
+      skillsTotal: 0,
       autoCompactEnabled: true,
       customCompactionEnabled: false,
       usingSubscription: false,
@@ -41,7 +45,7 @@ function createSegmentContext(thinkingLevel: string, colors: ColorScheme): Segme
    };
 }
 
-test("thinking segment uses per-level colors for off through medium", () => {
+await test("thinking segment uses per-level colors for off through medium", () => {
    const colors: ColorScheme = {
       thinking: "#111111",
       thinkingMinimal: "#222222",

@@ -7,7 +7,6 @@
  * 3. Default colors
  */
 
-import type { ThemeColor } from "@earendil-works/pi-coding-agent";
 import { existsSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -53,6 +52,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
    return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isSemanticColorKey(key: string): key is SemanticColor {
+   return Object.prototype.hasOwnProperty.call(DEFAULT_COLORS, key);
+}
+
 function sanitizeUserThemeOverrides(value: unknown): ColorScheme {
    if (!isRecord(value)) {
       return {};
@@ -60,7 +63,7 @@ function sanitizeUserThemeOverrides(value: unknown): ColorScheme {
 
    const sanitized: ColorScheme = {};
    for (const [key, rawColor] of Object.entries(value)) {
-      if (!Object.prototype.hasOwnProperty.call(DEFAULT_COLORS, key)) {
+      if (!isSemanticColorKey(key)) {
          continue;
       }
       if (typeof rawColor !== "string") {
@@ -72,7 +75,7 @@ function sanitizeUserThemeOverrides(value: unknown): ColorScheme {
          continue;
       }
 
-      sanitized[key as SemanticColor] = color as ColorValue;
+      sanitized[key] = color as ColorValue;
    }
 
    return sanitized;
@@ -163,9 +166,9 @@ export function applyColor(theme: ThemeLike, color: ColorValue, text: string): s
    }
 
    try {
-      return theme.fg(color as ThemeColor, text);
+      return theme.fg(color, text);
    } catch (error) {
-      const key = String(color);
+      const key = color;
       if (!warnedInvalidThemeColors.has(key)) {
          warnedInvalidThemeColors.add(key);
          if (warnedInvalidThemeColors.size > 200) {
@@ -195,7 +198,7 @@ export function rainbow(text: string): string {
       if (char === " " || char === ":") {
          result += char;
       } else {
-         result += hexToAnsi(RAINBOW_COLORS[colorIndex % RAINBOW_COLORS.length]!) + char;
+         result += hexToAnsi(RAINBOW_COLORS[colorIndex % RAINBOW_COLORS.length]) + char;
          colorIndex++;
       }
    }

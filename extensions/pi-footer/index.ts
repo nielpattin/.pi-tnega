@@ -286,7 +286,7 @@ export default function powerlineFooter(pi: ExtensionAPI) {
 
       let clearExtensionStatusesAndRepaint: (() => void) | null = null;
       if (typeof originalClearExtensionStatuses === "function") {
-         clearExtensionStatusesAndRepaint = function clearExtensionStatusesAndRepaint(this: unknown) {
+         clearExtensionStatusesAndRepaint = function (this: unknown) {
             originalClearExtensionStatuses.call(this);
             requestImmediateStatusRender();
          };
@@ -496,7 +496,8 @@ export default function powerlineFooter(pi: ExtensionAPI) {
       }
       // Check for bash commands that might change git branch
       if (event.toolName === "bash" && event.input?.command) {
-         const cmd = String(event.input.command);
+         const cmd =
+            typeof event.input.command === "string" ? event.input.command : JSON.stringify(event.input.command);
          if (mightChangeGitBranch(cmd)) {
             // Invalidate caches since working tree state changes with branch
             invalidateGitStatus();

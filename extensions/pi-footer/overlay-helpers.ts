@@ -19,7 +19,7 @@ export async function showSelectOverlay(
    items: SelectItem[],
    maxVisible: number,
 ): Promise<SelectItem | null> {
-   return (ctx.ui.custom as (factory: unknown, options: unknown) => Promise<SelectItem | null>)(
+   return (ctx.ui.custom as unknown as (factory: unknown, options: unknown) => Promise<SelectItem | null>)(
       (tui: any, theme: Theme, _keybindings: any, done: (result: SelectItem | null) => void) => {
          const selectList = new SelectList(items, maxVisible, overlaySelectListTheme(theme));
          const border = (text: string) => theme.fg("dim", text);
