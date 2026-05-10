@@ -1,0 +1,17 @@
+{
+   "name": "pi-caveman",
+   "version": "1.0.0",
+   "description": "Caveman mode for pi — terse output, ~75% fewer tokens, full technical accuracy",
+   "keywords": [
+      "pi-package"
+   ],
+   "license": "MIT",
+   "pi": {
+      "extensions": [
+         "./extensions/caveman"
+      ],
+      "skills": [
+         "./skills"
+      ]
+   }
+}

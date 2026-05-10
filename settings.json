@@ -3,8 +3,8 @@
   "compaction": {
     "enabled": false
   },
-  "defaultModel": "gpt-5.5",
-  "defaultProvider": "freemodel",
+  "defaultModel": "claude-haiku-4.5",
+  "defaultProvider": "github-copilot",
   "defaultThinkingLevel": "medium",
   "doubleEscapeAction": "none",
   "editorPaddingX": 0,
@@ -45,7 +45,7 @@
     "+extensions\\pi-mcp-adapter\\index.ts"
   ],
   "followUpMode": "all",
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "images": {
     "autoResize": true
   },
@@ -117,5 +117,6 @@
   "npmCommand": [
     "bun"
   ],
-  "powerline": "default"
+  "powerline": "default",
+  "caveman": "full"
 }
