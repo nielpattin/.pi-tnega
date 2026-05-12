@@ -787,9 +787,10 @@ export class TerminalSplitCompositor {
          this.lastLeftPress.line === line &&
          now - this.lastLeftPress.at <= DOUBLE_CLICK_MS
       ) {
+         const bounds = this.getWordBoundsOnLine(location.area, line, location.point.col);
          this.selectionArea = location.area;
-         this.selectionAnchor = { line, col: 0 };
-         this.selectionFocus = { line, col: this.selectionLineWidth(location.area, line) };
+         this.selectionAnchor = { line, col: bounds.start };
+         this.selectionFocus = { line, col: bounds.end };
          this.selectionDragging = true;
          this.preserveSelectionFocusOnRelease = true;
          this.lastLeftPress = null;
@@ -890,16 +891,132 @@ export class TerminalSplitCompositor {
       const endCol = Math.max(startCol, Math.min(range.endCol, visibleWidth(plain)));
       if (startCol === endCol) return line;
 
-      const before = sliceColumns(plain, 0, startCol);
-      const selected = sliceColumns(plain, startCol, endCol);
-      const after = sliceColumns(plain, endCol, Number.POSITIVE_INFINITY);
-      return `${before}\u001b[7m${selected}\u001b[27m${after}`;
+      return this.applySelectionHighlight(line, startCol, endCol);
+   }
+
+   private applySelectionHighlight(line: string, startCol: number, endCol: number): string {
+      // Strip OSC control sequences (FinalTerm prompts, hyperlink markers)
+      // so they don't contribute to visible width, matching the old
+      // stripAnsi-based behavior. Then iterate through CSI color/style
+      // codes, preserving them while wrapping selected graphemes in
+      // reverse video.
+      const cleaned = stripOscSequences(line);
+      const csiPattern = /\x1b\[[0-9;?]*[ -/]*[@-~]/g;
+      let result = "";
+      let col = 0;
+      let inSelection = false;
+      let lastIndex = 0;
+
+      const closeSelection = () => {
+         if (inSelection) {
+            result += "\u001b[27m";
+            inSelection = false;
+         }
+      };
+
+      const openSelection = () => {
+         if (!inSelection) {
+            result += "\u001b[7m";
+            inSelection = true;
+         }
+      };
+
+      let match: RegExpExecArray | null;
+      while ((match = csiPattern.exec(cleaned)) !== null) {
+         const text = cleaned.slice(lastIndex, match.index);
+         if (text) {
+            for (const { segment } of graphemeSegmenter.segment(text)) {
+               const width = Math.max(0, visibleWidth(segment));
+               const shouldSelect = col < endCol && col + width > startCol;
+               if (shouldSelect) {
+                  openSelection();
+               } else {
+                  closeSelection();
+               }
+               result += segment;
+               col += width;
+            }
+         }
+         result += match[0];
+         lastIndex = match.index + match[0].length;
+      }
+
+      const remaining = cleaned.slice(lastIndex);
+      if (remaining) {
+         for (const { segment } of graphemeSegmenter.segment(remaining)) {
+            const width = Math.max(0, visibleWidth(segment));
+            const shouldSelect = col < endCol && col + width > startCol;
+            if (shouldSelect) {
+               openSelection();
+            } else {
+               closeSelection();
+            }
+            result += segment;
+            col += width;
+         }
+      }
+
+      closeSelection();
+      return result;
    }
 
    private selectionLineWidth(area: SelectionArea, lineIndex: number): number {
       const lines = area === "root" ? this.visibleRootLines : this.visibleClusterLines;
       const firstLine = area === "root" ? this.visibleRootStart : 0;
       return visibleWidth(stripAnsi(lines[lineIndex - firstLine] ?? ""));
+   }
+
+   private getWordBoundsOnLine(area: SelectionArea, lineIndex: number, col: number): { start: number; end: number } {
+      const lines = area === "root" ? this.visibleRootLines : this.visibleClusterLines;
+      const firstLine = area === "root" ? this.visibleRootStart : 0;
+      const line = stripAnsi(lines[lineIndex - firstLine] ?? "");
+      if (!line) return { start: col, end: col };
+
+      // Build column-indexed grapheme segments.
+      const segments: { segment: string; col: number; width: number }[] = [];
+      let currentCol = 0;
+      for (const { segment } of graphemeSegmenter.segment(line)) {
+         const width = Math.max(0, visibleWidth(segment));
+         segments.push({ segment, col: currentCol, width });
+         currentCol += width;
+      }
+
+      const segIndex = segments.findIndex((s) => col >= s.col && col < s.col + s.width);
+      if (segIndex === -1) return { start: col, end: col };
+
+      const segment = segments[segIndex].segment;
+      const isWord = /\w/.test(segment);
+      const isSpace = /^\s$/.test(segment);
+
+      // Clicked on whitespace — no word to select.
+      if (isSpace) return { start: col, end: col };
+
+      let startSeg = segIndex;
+      let endSeg = segIndex;
+
+      if (isWord) {
+         while (startSeg > 0 && /\w/.test(segments[startSeg - 1].segment)) startSeg--;
+         while (endSeg < segments.length - 1 && /\w/.test(segments[endSeg + 1].segment)) endSeg++;
+      } else {
+         // Non-word, non-space: group adjacent punctuation/symbols together.
+         while (
+            startSeg > 0 &&
+            !/\w/.test(segments[startSeg - 1].segment) &&
+            !/^\s$/.test(segments[startSeg - 1].segment)
+         )
+            startSeg--;
+         while (
+            endSeg < segments.length - 1 &&
+            !/\w/.test(segments[endSeg + 1].segment) &&
+            !/^\s$/.test(segments[endSeg + 1].segment)
+         )
+            endSeg++;
+      }
+
+      return {
+         start: segments[startSeg].col,
+         end: segments[endSeg].col + segments[endSeg].width,
+      };
    }
 
    private getSelectedText(): string {
