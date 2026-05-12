@@ -1,14 +1,15 @@
 {
    "providers": {
-      "openrouter": {
+      "opencode": {
+         "apiKey": "opencode",
          "models": [
             {
-               "id": "inclusionai/ring-2.6-1t:free",
-               "name": "inclusionAI: Ring 2.6",
+               "id": "deepseek-v4-flash-free",
+               "name": "OpenCode Zen: DeepSeek V4 Flash Free",
                "reasoning": true,
                "input": ["text"],
-               "contextWindow": 262144,
-               "maxTokens": 65536,
+               "contextWindow": 1000000,
+               "maxTokens": 384000,
                "cost": {
                   "input": 0,
                   "output": 0,
@@ -18,7 +19,7 @@
             }
          ],
          "api": "openai-completions",
-         "baseUrl": "https://openrouter.ai/api/v1"
+         "baseUrl": "https://opencode.ai/zen/v1"
       }
    }
 }

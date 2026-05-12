@@ -189,32 +189,12 @@ function toolSchemaForRequest(tool: Tool): unknown {
    return tool.parameters ?? { type: "object", properties: {} };
 }
 
-function sanitizeToolVocabulary(text: string): string {
-   return text
-      .replace(/\bglob\s+patterns\b/gi, "file patterns")
-      .replace(/\bglob\s+pattern\b/gi, "file pattern")
-      .replace(/\bglob\b/gi, "file pattern");
-}
-
-function sanitizeSchemaKey(key: string): string {
-   return key === "glob" ? "filePattern" : key;
-}
-
-function sanitizeOutboundValue(value: unknown): unknown {
-   if (typeof value === "string") return value === "glob" ? "filePattern" : sanitizeToolVocabulary(value);
-   if (Array.isArray(value)) return value.map((entry) => sanitizeOutboundValue(entry));
-   if (!isRecord(value)) return value;
-   return Object.fromEntries(
-      Object.entries(value).map(([key, entry]) => [sanitizeSchemaKey(key), sanitizeOutboundValue(entry)]),
-   );
-}
-
 function buildTools(tools: Tool[] | undefined): CommandCodeTool[] | undefined {
    if (!tools || tools.length === 0) return undefined;
    return tools.map((tool) => ({
       name: tool.name,
-      description: sanitizeToolVocabulary(tool.description),
-      input_schema: sanitizeOutboundValue(toolSchemaForRequest(tool)),
+      description: tool.description,
+      input_schema: toolSchemaForRequest(tool),
    }));
 }
 
@@ -223,7 +203,7 @@ function buildSystemPrompt(config: ExtensionConfig, context: Context): string | 
       .filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0)
       .join("\n\n")
       .trim();
-   return prompt.length > 0 ? sanitizeToolVocabulary(prompt) : undefined;
+   return prompt.length > 0 ? prompt : undefined;
 }
 
 function resolveMaxTokens(model: Model<Api>, options?: SimpleStreamOptions): number {
@@ -792,6 +772,7 @@ async function consumeEventStream(
    output: AssistantMessage,
    model: Model<Api>,
    context: Context,
+   logger: DebugLogger,
 ): Promise<void> {
    stream.push({ type: "start", partial: output });
    const textBlocks = new Map<string, number>();
@@ -907,7 +888,14 @@ async function consumeEventStream(
       if (type === "error") {
          finalReason = "error";
          finalError =
-            optionalString(event.message) ?? optionalString(event.error) ?? "CommandCode stream returned an error.";
+            optionalString(event.message) ??
+            optionalString(event.error) ??
+            (isRecord(event.error) ? optionalString(event.error.message) : undefined) ??
+            (typeof event.statusCode === "number"
+               ? `CommandCode stream error (HTTP ${event.statusCode})`
+               : undefined) ??
+            "CommandCode stream returned an error.";
+         logger.error("sse_stream_error", { model: model.id, rawError: event.error, resolvedMessage: finalError });
       }
    };
 
@@ -969,12 +957,19 @@ async function executeCommandCodeRequest(
 
       if (!response.ok) {
          const errorPayload = await readJsonResponse(response);
-         throw new Error(extractErrorMessage(errorPayload, response.status));
+         const errorMessage = extractErrorMessage(errorPayload, response.status);
+         logger.error("http_error", {
+            model: model.id,
+            status: response.status,
+            error: errorMessage,
+            rawPayload: errorPayload,
+         });
+         throw new Error(errorMessage);
       }
 
       const contentType = response.headers.get("content-type") ?? "";
       if (contentType.includes("text/event-stream")) {
-         await consumeEventStream(response, stream, output, model, context);
+         await consumeEventStream(response, stream, output, model, context, logger);
          return;
       }
 

@@ -1,7 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { homedir } from "node:os";
-import { dirname, isAbsolute, join, resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import type { ProviderModelConfig } from "@earendil-works/pi-coding-agent";
 
@@ -41,14 +39,7 @@ export interface ConfigLoadResult {
    warnings: string[];
 }
 
-type RawModel = Record<string, unknown>;
-
 const THINKING_LEVEL_KEYS = ["off", "minimal", "low", "medium", "high", "xhigh"] as const;
-const FALLBACK_COMMAND_CODE_VERSION = "0.25.1";
-const COMMAND_CODE_VERSION_AUTO = "auto";
-const PACKAGE_JSON = "package.json";
-
-const require = createRequire(import.meta.url);
 
 const DEFAULT_MODEL_DEFAULTS = {
    reasoning: false,
@@ -90,35 +81,49 @@ const COMMAND_CODE_AUTO_REASONING_MAP = {
    xhigh: null,
 } satisfies ThinkingLevelMap;
 
-const DEFAULT_RAW_MODELS: RawModel[] = [
+const DEFAULT_RAW_MODELS: Record<string, unknown>[] = [
    {
       id: "moonshotai/Kimi-K2.5",
       name: "Kimi K2.5",
+      description: "multimodal frontend coding",
       reasoning: false,
-      contextWindow: 262144,
+      contextWindow: 256000,
       maxTokens: 262144,
-      cost: { input: 0.6, output: 3, cacheRead: 0.1, cacheWrite: 0 },
+      cost: { input: 0.6, output: 3, cacheRead: 0, cacheWrite: 0 },
    },
    {
       id: "moonshotai/Kimi-K2.6",
       name: "Kimi K2.6",
+      description: "long-horizon coding with vision",
       reasoning: false,
-      contextWindow: 262144,
+      contextWindow: 256000,
       maxTokens: 262144,
       cost: { input: 0.95, output: 4, cacheRead: 0.16, cacheWrite: 0 },
    },
    {
       id: "deepseek/deepseek-v4-pro",
       name: "DeepSeek V4 Pro",
+      description: "hybrid-attention long-context reasoning",
       reasoning: true,
       thinkingLevelMap: COMMAND_CODE_AUTO_REASONING_MAP,
-      contextWindow: 1048576,
+      contextWindow: 1000000,
       maxTokens: 393216,
       cost: { input: 0.435, output: 0.87, cacheRead: 0.003625, cacheWrite: 0 },
    },
    {
+      id: "deepseek/deepseek-v4-flash",
+      name: "DeepSeek V4 Flash",
+      description: "fast hybrid-attention reasoning",
+      reasoning: true,
+      thinkingLevelMap: COMMAND_CODE_AUTO_REASONING_MAP,
+      contextWindow: 1000000,
+      maxTokens: 384000,
+      cost: { input: 0.14, output: 0.28, cacheRead: 0.0028, cacheWrite: 0 },
+   },
+   {
       id: "Qwen/Qwen3.6-Plus",
       name: "Qwen 3.6 Plus",
+      description: "agentic coding & reasoning",
       reasoning: true,
       thinkingLevelMap: COMMAND_CODE_AUTO_REASONING_MAP,
       contextWindow: 1000000,
@@ -126,26 +131,105 @@ const DEFAULT_RAW_MODELS: RawModel[] = [
       cost: { input: 0.5, output: 3, cacheRead: 0.1, cacheWrite: 0 },
    },
    {
+      id: "Qwen/Qwen3.6-Max-Preview",
+      name: "Qwen 3.6 Max Preview",
+      description: "vibe coding & efficient agent execution",
+      reasoning: true,
+      thinkingLevelMap: COMMAND_CODE_AUTO_REASONING_MAP,
+      contextWindow: 1000000,
+      maxTokens: 65536,
+      cost: { input: 0.5, output: 3, cacheRead: 0.1, cacheWrite: 0 },
+   },
+   {
+      id: "stepfun/Step-3.5-Flash",
+      name: "Step 3.5 Flash",
+      description: "fast sparse-MoE agentic reasoning",
+      reasoning: true,
+      thinkingLevelMap: COMMAND_CODE_AUTO_REASONING_MAP,
+      contextWindow: 1000000,
+      maxTokens: 131072,
+      cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+   },
+   {
+      id: "zai-org/GLM-5",
+      name: "GLM 5",
+      description: "multi-mode thinking & long-range planning",
+      reasoning: false,
+      contextWindow: 200000,
+      maxTokens: 131072,
+      cost: { input: 0.95, output: 3.15, cacheRead: 0, cacheWrite: 0 },
+   },
+   {
+      id: "zai-org/GLM-5.1",
+      name: "GLM 5.1",
+      description: "long-horizon autonomous coding agent",
+      reasoning: false,
+      contextWindow: 200000,
+      maxTokens: 131072,
+      cost: { input: 1.4, output: 4.4, cacheRead: 0.26, cacheWrite: 0 },
+   },
+   {
+      id: "MiniMaxAI/MiniMax-M2.5",
+      name: "MiniMax M2.5",
+      description: "cross-platform full-stack agentic dev",
+      reasoning: false,
+      contextWindow: 200000,
+      maxTokens: 131072,
+      cost: { input: 0.5, output: 2, cacheRead: 0, cacheWrite: 0 },
+   },
+   {
+      id: "MiniMaxAI/MiniMax-M2.7",
+      name: "MiniMax M2.7",
+      description: "end-to-end software engineering agent",
+      reasoning: false,
+      contextWindow: 1000000,
+      maxTokens: 131072,
+      cost: { input: 0.5, output: 2, cacheRead: 0, cacheWrite: 0 },
+   },
+   {
       id: "gpt-5.5",
       name: "GPT 5.5",
+      description: "latest frontier model for general complex work",
       reasoning: true,
       thinkingLevelMap: OPENAI_REASONING_MAP,
-      contextWindow: 922000,
+      contextWindow: 1000000,
       maxTokens: 128000,
       cost: { input: 5, output: 30, cacheRead: 0.5, cacheWrite: 0 },
    },
    {
-      id: "gpt-5.3-codex",
-      name: "GPT 5.3 Codex",
+      id: "gpt-5.4",
+      name: "GPT 5.4",
+      description: "frontier model for general complex work",
       reasoning: true,
       thinkingLevelMap: OPENAI_REASONING_MAP,
-      contextWindow: 272000,
+      contextWindow: 400000,
+      maxTokens: 128000,
+      cost: { input: 2.5, output: 15, cacheRead: 0.25, cacheWrite: 0 },
+   },
+   {
+      id: "gpt-5.3-codex",
+      name: "GPT 5.3 Codex",
+      description: "frontier coding model",
+      reasoning: true,
+      thinkingLevelMap: OPENAI_REASONING_MAP,
+      contextWindow: 400000,
       maxTokens: 128000,
       cost: { input: 2, output: 8, cacheRead: 0.5, cacheWrite: 0 },
    },
    {
+      id: "gpt-5.4-mini",
+      name: "GPT 5.4 Mini",
+      description: "fast, cost-effective model for everyday tasks",
+      reasoning: true,
+      thinkingLevelMap: OPENAI_REASONING_MAP,
+      contextWindow: 400000,
+      maxTokens: 128000,
+      cost: { input: 0.75, output: 4.5, cacheRead: 0.075, cacheWrite: 0 },
+   },
+   {
       id: "claude-sonnet-4-6",
       name: "Claude Sonnet 4.6",
+      description: "best combo of speed & intelligence (recommended)",
       reasoning: true,
       thinkingLevelMap: ANTHROPIC_REASONING_MAP,
       contextWindow: 1000000,
@@ -155,6 +239,7 @@ const DEFAULT_RAW_MODELS: RawModel[] = [
    {
       id: "claude-opus-4-7",
       name: "Claude Opus 4.7",
+      description: "most intelligent for agents and coding",
       reasoning: true,
       thinkingLevelMap: ANTHROPIC_OPUS_4_7_REASONING_MAP,
       contextWindow: 1000000,
@@ -164,27 +249,22 @@ const DEFAULT_RAW_MODELS: RawModel[] = [
    {
       id: "claude-opus-4-6",
       name: "Claude Opus 4.6",
+      description: "most capable for complex work",
       reasoning: true,
       thinkingLevelMap: ANTHROPIC_OPUS_4_6_REASONING_MAP,
-      contextWindow: 1000000,
+      contextWindow: 200000,
       maxTokens: 128000,
       cost: { input: 5, output: 25, cacheRead: 0.5, cacheWrite: 6.25 },
    },
    {
-      id: "zai-org/GLM-5.1",
-      name: "GLM 5.1",
+      id: "claude-haiku-4-5-20251001",
+      name: "Claude Haiku 4.5",
+      description: "fastest & most compact, great for quick tasks",
       reasoning: false,
+      thinkingLevelMap: ANTHROPIC_REASONING_MAP,
       contextWindow: 200000,
-      maxTokens: 131072,
-      cost: { input: 1.4, output: 4.4, cacheRead: 0.26, cacheWrite: 0 },
-   },
-   {
-      id: "zai-org/GLM-5",
-      name: "GLM 5",
-      reasoning: false,
-      contextWindow: 204800,
-      maxTokens: 131072,
-      cost: { input: 1, output: 3.2, cacheRead: 0.2, cacheWrite: 0 },
+      maxTokens: 64000,
+      cost: { input: 1, output: 5, cacheRead: 0.1, cacheWrite: 1.25 },
    },
 ];
 
@@ -346,109 +426,6 @@ function readRawConfig(extensionRoot: string, warnings: string[]): Record<string
    return {};
 }
 
-function resolveConfigPath(extensionRoot: string, pathValue: string): string {
-   return isAbsolute(pathValue) ? pathValue : resolve(extensionRoot, pathValue);
-}
-
-function defaultModelsJsonPath(extensionRoot: string): string {
-   return resolve(extensionRoot, "..", "..", "models.json");
-}
-
-function packageVersionFrom(path: string): string | undefined {
-   try {
-      const parsed = JSON.parse(readFileSync(path, "utf-8"));
-      return isRecord(parsed) ? optionalString(parsed.version) : undefined;
-   } catch {
-      return undefined;
-   }
-}
-
-function commandCodePackageCandidates(extensionRoot: string): string[] {
-   const candidates = new Set<string>();
-   try {
-      candidates.add(require.resolve("command-code/package.json"));
-   } catch {
-      // command-code is optional; direct provider requests still work without the CLI package.
-   }
-
-   candidates.add(resolve(extensionRoot, "node_modules", "command-code", PACKAGE_JSON));
-   candidates.add(resolve(extensionRoot, "..", "node_modules", "command-code", PACKAGE_JSON));
-   candidates.add(resolve(extensionRoot, "..", "..", "node_modules", "command-code", PACKAGE_JSON));
-
-   if (process.env.APPDATA) {
-      candidates.add(resolve(process.env.APPDATA, "npm", "node_modules", "command-code", PACKAGE_JSON));
-   }
-   if (process.env.NPM_CONFIG_PREFIX) {
-      candidates.add(resolve(process.env.NPM_CONFIG_PREFIX, "node_modules", "command-code", PACKAGE_JSON));
-      candidates.add(resolve(process.env.NPM_CONFIG_PREFIX, "lib", "node_modules", "command-code", PACKAGE_JSON));
-   }
-
-   const home = homedir();
-   if (home) {
-      candidates.add(resolve(home, ".npm-global", "lib", "node_modules", "command-code", PACKAGE_JSON));
-      candidates.add(resolve(home, ".local", "share", "npm", "lib", "node_modules", "command-code", PACKAGE_JSON));
-      candidates.add(resolve(home, "AppData", "Roaming", "npm", "node_modules", "command-code", PACKAGE_JSON));
-   }
-
-   const executableDir = dirname(process.execPath);
-   candidates.add(resolve(executableDir, "node_modules", "command-code", PACKAGE_JSON));
-   candidates.add(resolve(executableDir, "..", "lib", "node_modules", "command-code", PACKAGE_JSON));
-
-   return [...candidates];
-}
-
-function detectCommandCodeVersion(extensionRoot: string): string | undefined {
-   for (const candidate of commandCodePackageCandidates(extensionRoot)) {
-      if (!existsSync(candidate)) continue;
-      const version = packageVersionFrom(candidate);
-      if (version) return version;
-   }
-   return undefined;
-}
-
-function resolveCommandCodeVersion(raw: Record<string, unknown>, extensionRoot: string, warnings: string[]): string {
-   const configured = optionalString(raw.commandCodeVersion);
-   if (configured && configured.toLowerCase() !== COMMAND_CODE_VERSION_AUTO) return configured;
-
-   const detected = detectCommandCodeVersion(extensionRoot);
-   if (detected) return detected;
-
-   if (configured?.toLowerCase() === COMMAND_CODE_VERSION_AUTO) {
-      warnings.push(
-         `commandCodeVersion is auto, but the CommandCode CLI package was not found; using fallback ${FALLBACK_COMMAND_CODE_VERSION}.`,
-      );
-   }
-   return FALLBACK_COMMAND_CODE_VERSION;
-}
-
-function readModelsJsonProvider(
-   raw: Record<string, unknown>,
-   extensionRoot: string,
-   providerId: string,
-   warnings: string[],
-): Record<string, unknown> | undefined {
-   const configuredPath = optionalString(raw.modelsJsonPath);
-   const modelsJsonPath = configuredPath
-      ? resolveConfigPath(extensionRoot, configuredPath)
-      : defaultModelsJsonPath(extensionRoot);
-   if (!existsSync(modelsJsonPath)) {
-      if (configuredPath) warnings.push(`modelsJsonPath does not exist: ${modelsJsonPath}`);
-      return undefined;
-   }
-
-   try {
-      const parsed = JSON.parse(readFileSync(modelsJsonPath, "utf-8"));
-      if (!isRecord(parsed) || !isRecord(parsed.providers)) return undefined;
-      const provider = parsed.providers[providerId];
-      return isRecord(provider) ? provider : undefined;
-   } catch (error) {
-      warnings.push(
-         `Unable to read models.json provider metadata: ${error instanceof Error ? error.message : "unknown error"}`,
-      );
-      return undefined;
-   }
-}
-
 function normalizeModelList(
    rawModels: unknown,
    defaults: Omit<CommandCodeProviderModelConfig, "id" | "name">,
@@ -463,15 +440,12 @@ export function loadConfig(extensionRoot: string): ConfigLoadResult {
    const warnings: string[] = [];
    const raw = readRawConfig(extensionRoot, warnings);
    const providerId = stringOr(raw.providerId, "command-code");
-   const modelsJsonProvider = readModelsJsonProvider(raw, extensionRoot, providerId, warnings);
    const defaults = modelDefaultsFrom(raw);
-   const modelsJsonModels = normalizeModelList(modelsJsonProvider?.models, defaults);
    const configModels = normalizeModelList(Array.isArray(raw.models) ? raw.models : DEFAULT_RAW_MODELS, defaults);
-   const models = modelsJsonModels.length > 0 ? modelsJsonModels : configModels;
+   const models = configModels.length > 0 ? configModels : normalizeModelList(DEFAULT_RAW_MODELS, defaults);
 
    if (models.length === 0) {
-      warnings.push("No valid models were configured; using the default CommandCode model list.");
-      models.push(...normalizeModelList(DEFAULT_RAW_MODELS, defaults));
+      warnings.push("No valid models configured.");
    }
 
    return {
@@ -480,9 +454,9 @@ export function loadConfig(extensionRoot: string): ConfigLoadResult {
          debug: booleanOr(raw.debug, false),
          providerId,
          displayName: stringOr(raw.displayName, "CommandCode"),
-         upstreamUrl: stringOr(raw.upstreamUrl, stringOr(modelsJsonProvider?.baseUrl, "https://api.commandcode.ai")),
-         apiKey: stringOr(raw.apiKey, stringOr(modelsJsonProvider?.apiKey, "COMMAND_CODE_TOKEN")),
-         commandCodeVersion: resolveCommandCodeVersion(raw, extensionRoot, warnings),
+         upstreamUrl: stringOr(raw.upstreamUrl, "https://api.commandcode.ai"),
+         apiKey: stringOr(raw.apiKey, "COMMAND_CODE_TOKEN"),
+         commandCodeVersion: stringOr(raw.commandCodeVersion, "0.25.1"),
          commandCodeProvider: stringOr(raw.commandCodeProvider, "command-code"),
          requestTimeoutMs: numberOr(raw.requestTimeoutMs, 300_000),
          memory: typeof raw.memory === "string" ? raw.memory : "",

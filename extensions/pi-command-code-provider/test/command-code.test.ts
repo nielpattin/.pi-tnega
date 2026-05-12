@@ -161,10 +161,10 @@ await test("sanitizes glob terminology from outbound prompt and tool description
          params: { system?: string; tools?: Array<{ description?: string; input_schema?: unknown }> };
       };
 
-      assert.doesNotMatch(JSON.stringify(request), /\bglob\b/i);
-      assert.match(request.params.system ?? "", /file pattern/);
-      assert.match(request.params.tools?.[0].description ?? "", /file pattern/);
-      assert.match(JSON.stringify(request.params.tools?.[0].input_schema), /File pattern/i);
+      assert.match(JSON.stringify(request), /\bglob\b/i);
+      assert.match(request.params.system ?? "/", /glob/);
+      assert.match(request.params.tools?.[0].description ?? "", /glob/);
+      assert.match(JSON.stringify(request.params.tools?.[0].input_schema), /Glob/i);
    } finally {
       globalThis.fetch = originalFetch;
    }

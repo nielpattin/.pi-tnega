@@ -3,8 +3,8 @@
   "compaction": {
     "enabled": false
   },
-  "defaultModel": "claude-haiku-4.5",
-  "defaultProvider": "github-copilot",
+  "defaultModel": "deepseek-v4-flash-free",
+  "defaultProvider": "opencode",
   "defaultThinkingLevel": "medium",
   "doubleEscapeAction": "none",
   "editorPaddingX": 0,
@@ -26,8 +26,7 @@
     "cmd-code/deepseek/deepseek-v4-pro",
     "cmd-code/deepseek/deepseek-v4-flash",
     "freemodel/gpt-5.5",
-    "openrouter/baidu/cobuddy:free",
-    "openrouter/inclusionai/ring-2.6-1t:free"
+    "opencode/deepseek-v4-flash-free"
   ],
   "extensions": [
     "+extensions\\tool-selector\\index.ts",
@@ -42,7 +41,7 @@
     "-extensions\\rg-guard.ts",
     "+extensions\\pi-subagents\\src\\index.ts",
     "+extensions\\pi-footer\\index.ts",
-    "+extensions\\pi-mcp-adapter\\index.ts"
+    "-extensions\\pi-mcp-adapter\\index.ts"
   ],
   "followUpMode": "all",
   "hideThinkingBlock": true,
@@ -51,17 +50,11 @@
   },
   "lastChangelogVersion": "0.74.0",
   "packages": [
-    {
-      "extensions": [
-        "-extensions\\index.ts"
-      ],
-      "source": "C:\\Users\\niel\\.pi\\agent\\extensions\\pi-teams"
-    },
     "git:github.com/raunovillberg/im-pi-eccable",
     {
       "source": "npm:pi-mcp-adapter",
       "extensions": [
-        "-index.ts"
+        "+index.ts"
       ]
     },
     "npm:pi-simplify",
@@ -71,7 +64,8 @@
       "extensions": [
         "-src\\index.ts"
       ]
-    }
+    },
+    "C:\\Users\\niel\\.pi\\agent\\packages\\pi-caveman"
   ],
   "prompts": [
     "+prompts\\commit.md"
@@ -83,9 +77,10 @@
     "-skills\\figma-use\\SKILL.md",
     "+skills\\agent-browser\\SKILL.md",
     "-skills\\playwriter\\SKILL.md",
-    "-skills\\drawio-diagrams-enhanced\\SKILL.md",
     "-skills\\brainstorming\\SKILL.md",
-    "-skills\\using-superpowers\\SKILL.md"
+    "-skills\\using-superpowers\\SKILL.md",
+    "+skills\\distill\\SKILL.md",
+    "-skills\\drawio-diagrams-enhanced\\SKILL.md"
   ],
   "steeringMode": "all",
   "terminal": {
@@ -109,7 +104,6 @@
   ],
   "transport": "auto",
   "treeFilterMode": "no-tools",
-  "designDeck": {},
   "retry": {
     "enabled": true,
     "maxRetries": 8
@@ -118,5 +112,5 @@
     "bun"
   ],
   "powerline": "default",
-  "caveman": "full"
+  "caveman": "lite"
 }
