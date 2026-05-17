@@ -1,6 +1,7 @@
 import { defineConfig } from "oxlint";
 
 export default defineConfig({
+   plugins: ["eslint"],
    options: {
       typeAware: true,
       typeCheck: true,
@@ -15,6 +16,7 @@ export default defineConfig({
       "**/tests/**",
       "*.test.ts",
       "preciseVerboseReporter.ts",
+      "recover-mimo-thinking.ts",
    ],
    rules: {
       "eslint/no-control-regex": "off",

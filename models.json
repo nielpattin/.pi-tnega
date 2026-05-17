@@ -7,6 +7,14 @@
                "id": "deepseek-v4-flash-free",
                "name": "OpenCode Zen: DeepSeek V4 Flash Free",
                "reasoning": true,
+               "thinkingLevelMap": {
+                  "off": "off",
+                  "minimal": "minimal",
+                  "low": "low",
+                  "medium": "medium",
+                  "high": "high",
+                  "xhigh": "xhigh"
+               },
                "input": ["text"],
                "contextWindow": 1000000,
                "maxTokens": 384000,

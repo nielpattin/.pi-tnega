@@ -392,11 +392,11 @@ Create `~/.pi/agent/intercom/config.json`:
 | `replyHint`     | true                      | Include reply instruction in incoming messages                                                                 |
 | `status`        | —                         | Optional custom status suffix shown after the automatic lifecycle status, for example `thinking · researching` |
 
-For example, if you have Bun installed and want it to start the broker directly, use:
+For example, if you have pnpm installed and want it to start the broker directly, use:
 
 ```json
 {
-    "brokerCommand": "bun",
+    "brokerCommand": "pnpm",
     "brokerArgs": []
 }
 ```

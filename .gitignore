@@ -151,23 +151,3 @@ auth.json
 multicodex.json
 *.jsonl
 git
-
-
-pi-tutor
-models.json.bak
-teams/
-tasks/
-
-tmp/
-session-manager
-*.bak
-mcp-cache.json
-pi-fff
-mcp-oauth/
-mcp-npx-cache.json
-generated-images
-intercom/
-pi-footer-hist
-mcp-onboarding.json
-# Nested extension repos
-/extensions/pi-mcp-adapter/

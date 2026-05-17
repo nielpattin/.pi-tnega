@@ -16,9 +16,9 @@
       ".": "./index.ts"
    },
    "scripts": {
-      "typecheck": "bun run tsc --noEmit",
-      "build": "bun run typecheck",
-      "test": "bun test"
+      "typecheck": "pnpm run tsc --noEmit",
+      "build": "pnpm run typecheck",
+      "test": "pnpm test"
    },
    "devDependencies": {
       "@earendil-works/pi-ai": "^0.74.0",

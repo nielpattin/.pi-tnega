@@ -1,11 +1,13 @@
-## Validation (Project Scope)
+## Validation (Project Scope - ~/.pi/agent/AGENTS.md only)
 
-- `bun lint` for linting.
-- `bun test` for testing.
-- `bun check` for lint, type, test checks.
+- `pnpm lint` for linting.
+- `pnpm test` for testing.
+- `pnpm check` for lint, type, test checks.
+- Test with vitest, write tests in tests/ directory in their own extension folder, name with \*.test.ts
 
 ## Behavior
 
+- When the user asks a question, answer it first before making edits or running implementation commands.
 - Do NOT implement/design/modify code unless explicitly asked.
 - Fix trivial issues immediately. Non-trivial: discuss approach first.
 - DON'T APOLOGIZE. Fix mistake without "sorry" or "my bad". Focus on solution.
@@ -67,16 +69,16 @@
 <tool_call_behavior>
 
 - Before every meaningful tool call, follow 3-step sequence:
-  1. **Think** — reason in `thinking` block.
-  2. **Say** — one concise sentence describing action.
-  3. **Call** — invoke tool.
+    1. **Think** — reason in `thinking` block.
+    2. **Say** — one concise sentence describing action.
+    3. **Call** — invoke tool.
 - Always before edits and verification commands.
 - Skip Say only for routine reads, obvious searches, repetitive low-signal calls. Do not skip for edits/verification/non-trivial mutation.
 - Sentence not optional for small models. Applies 100%, not ~10%.
   </tool_call_behavior>
 
 <pi-intercom>
-Coordinate with other local pi sessions. Use `/skill:pi-intercom` for patterns.
+Coordinate with other local pi sessions. Use `skill:pi-intercom` for patterns.
 
 **When:** Same codebase, reference codebase, related repos (shared libraries).
 

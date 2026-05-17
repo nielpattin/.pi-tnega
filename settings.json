@@ -1,11 +1,11 @@
 {
   "collapseChangelog": true,
   "compaction": {
-    "enabled": false
+    "enabled": true
   },
-  "defaultModel": "deepseek-v4-flash-free",
-  "defaultProvider": "opencode",
-  "defaultThinkingLevel": "medium",
+  "defaultModel": "mimo-v2.5-pro",
+  "defaultProvider": "xiaomi-token-plan-sgp",
+  "defaultThinkingLevel": "high",
   "doubleEscapeAction": "none",
   "editorPaddingX": 0,
   "enableSkillCommands": true,
@@ -22,50 +22,86 @@
     "google/gemini-3.1-pro-preview",
     "xiaomi-token-plan-sgp/mimo-v2.5-pro",
     "xiaomi-token-plan-sgp/mimo-v2.5",
-    "cmd-code/moonshotai/Kimi-K2.6",
+    "opencode/deepseek-v4-flash-free",
+    "deepseek/deepseek-v4-flash",
+    "deepseek/deepseek-v4-pro",
     "cmd-code/deepseek/deepseek-v4-pro",
     "cmd-code/deepseek/deepseek-v4-flash",
-    "freemodel/gpt-5.5",
-    "opencode/deepseek-v4-flash-free"
+    "cmd-code/moonshotai/Kimi-K2.6",
+    "freemodel/gpt-5.5"
   ],
   "extensions": [
-    "+extensions\\tool-selector\\index.ts",
     "-extensions\\web-reader.ts",
     "-extensions\\simplify-test.ts",
-    "-extensions\\notification\\index.ts",
     "-extensions\\cute-minimal-mode.ts",
-    "+extensions\\context-stats.ts",
     "-extensions\\files.ts",
     "-extensions\\stats.ts",
-    "-extensions\\git-guard.ts",
     "-extensions\\rg-guard.ts",
-    "+extensions\\pi-subagents\\src\\index.ts",
-    "+extensions\\pi-footer\\index.ts",
-    "-extensions\\pi-mcp-adapter\\index.ts"
+    "+extensions\\opencode-free\\index.ts",
+    "-extensions\\batch-read.ts",
+    "-extensions\\pi-footer\\index.ts",
+    "-extensions\\git-guard.ts",
+    "+extensions\\pi-command-code-provider\\index.ts",
+    "+extensions\\pi-intercom\\index.ts",
+    "-extensions\\pi-rtk\\index.ts",
+    "+extensions\\tool-selector\\index.ts",
+    "+extensions\\tps.ts",
+    "+extensions\\notification\\index.ts",
+    "+extensions\\kinda\\index.ts",
+    "+extensions\\recover-mimo-thinking.ts"
   ],
   "followUpMode": "all",
   "hideThinkingBlock": true,
   "images": {
     "autoResize": true
   },
-  "lastChangelogVersion": "0.74.0",
+  "lastChangelogVersion": "0.74.1",
   "packages": [
-    "git:github.com/raunovillberg/im-pi-eccable",
     {
-      "source": "npm:pi-mcp-adapter",
+      "source": "git:github.com/raunovillberg/im-pi-eccable",
       "extensions": [
         "+index.ts"
       ]
     },
-    "npm:pi-simplify",
-    "git:github.com/Jon-Vii/pi-imagegen",
     {
-      "source": "npm:@tintinweb/pi-subagents",
+      "source": "git:github.com/Jon-Vii/pi-imagegen",
       "extensions": [
-        "-src\\index.ts"
+        "-imagegen.ts"
       ]
     },
-    "C:\\Users\\niel\\.pi\\agent\\packages\\pi-caveman"
+    {
+      "source": "C:\\Users\\niel\\.pi\\agent\\packages\\pi-caveman",
+      "extensions": [
+        "+extensions\\caveman\\index.ts"
+      ],
+      "skills": [
+        "+skills\\caveman-commit\\SKILL.md",
+        "+skills\\caveman-review\\SKILL.md",
+        "+skills\\compress\\SKILL.md",
+        "+skills\\caveman\\SKILL.md"
+      ]
+    },
+    {
+      "source": "git:github.com/PurpleMyst/pi-goal",
+      "extensions": [
+        "-src\\extension.ts"
+      ]
+    },
+    {
+      "source": "git:github.com/nicobailon/pi-mcp-adapter"
+    },
+    {
+      "source": "C:\\Users\\niel\\.pi\\agent\\packages\\pi-simplify",
+      "extensions": [
+        "+src/index.ts"
+      ]
+    },
+    {
+      "source": "C:\\Users\\niel\\.pi\\agent\\packages\\pi-station",
+      "extensions": [
+        "+index.ts"
+      ]
+    }
   ],
   "prompts": [
     "+prompts\\commit.md"
@@ -80,7 +116,9 @@
     "-skills\\brainstorming\\SKILL.md",
     "-skills\\using-superpowers\\SKILL.md",
     "+skills\\distill\\SKILL.md",
-    "-skills\\drawio-diagrams-enhanced\\SKILL.md"
+    "-skills\\drawio-diagrams-enhanced\\SKILL.md",
+    "-skills\\drawio-skill\\SKILL.md",
+    "+skills\\extract\\SKILL.md"
   ],
   "steeringMode": "all",
   "terminal": {
@@ -109,8 +147,17 @@
     "maxRetries": 8
   },
   "npmCommand": [
-    "bun"
+    "pnpm",
+    "--loglevel=error"
   ],
-  "powerline": "default",
-  "caveman": "lite"
+  "caveman": "ultra",
+  "station": {
+    "fixedEditor": true,
+    "scrollbar": true,
+    "mouseScroll": true
+  },
+  "enableInstallTelemetry": false,
+  "warnings": {
+    "anthropicExtraUsage": false
+  }
 }

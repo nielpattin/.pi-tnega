@@ -195,6 +195,10 @@ export default function piRtkExtension(pi: ExtensionAPI) {
       if (typeof original !== "string" || !original.trim()) return;
       if (original.trimStart().startsWith("rtk ")) return;
 
+      // Skip rewriting for pnpm / bun / npm lint — rtk rewrite converts it to "rtk lint" which tries eslint
+      const trimmedCmd = original.trimStart();
+      if (/\b(pnpm|bun|npm)\b/.test(trimmedCmd) && /\blint\b/.test(trimmedCmd)) return;
+
       await refreshAvailability(ctx, false);
       if (!rtkAvailable) return;
 
