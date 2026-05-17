@@ -1,6 +1,5 @@
 packages:
   - "extensions/*"
-  - "packages/*"
 
 allowBuilds:
   "@google/genai": true
